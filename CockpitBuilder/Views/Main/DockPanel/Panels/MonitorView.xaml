@@ -1,0 +1,107 @@
+﻿<UserControl x:Class="CockpitBuilder.Views.Main.DockPanel.Panels.MonitorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:gg="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+             xmlns:local ="clr-namespace:CockpitBuilder.Views.Main.DockPanel.Models"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             mc:Ignorable="d"  d:DesignHeight="450" d:DesignWidth="800" 
+               Background="Transparent" cal:Message.Attach="[Event MouseEnter] = [Action MouseEnter];[Event MouseLeave] = [Action MouseLeave]">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="PupilDragAdorner">
+            <Grid>
+                <Rectangle Width="{Binding SelectedToolBoxItem.ImageWidth}" Height="{Binding SelectedToolBoxItem.ImageHeight}" StrokeThickness="4" Stroke="Green"/>
+                <Image  Source="{Binding SelectedToolBoxItem.FullImageName}" 
+                        Width="{Binding SelectedToolBoxItem.ImageWidth}" Height="{Binding SelectedToolBoxItem.ImageHeight}" HorizontalAlignment="Center"/>
+                <!--, diag:PresentationTraceSources.TraceLevel=High-->
+                <!--<TextBlock Text="{Binding FullName}" HorizontalAlignment="Center"/>-->
+            </Grid>
+        </DataTemplate>
+        <!--<DataTemplate x:Key="ItemDataTemplate"
+                      DataType="{x:Type local:ToolBoxItem}">
+            <Image Source="{Binding FullImageName}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}" />
+        </DataTemplate>-->
+
+    </UserControl.Resources>
+
+    <Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="6">
+            <Grid x:Name="MainGrid">
+ 
+                <Rectangle x:Name="MainRectangle" Width="1920" Height="1080" StrokeThickness="4" Stroke="Black" 
+                           gg:DragDrop.DropHandler="{Binding}" 
+                           gg:DragDrop.IsDropTarget="True" 
+                           gg:DragDrop.DragMouseAnchorPoint="0.5,0.5"
+                           gg:DragDrop.DropAdornerTemplate="{StaticResource PupilDragAdorner}"
+                           cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnMonitorView($source, $mousepoint, $eventArgs)]">
+                    <!--cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDown($source, $mousepoint, $eventArgs)]"-->
+                    <Rectangle.Fill>
+                        <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
+                            <!--<DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <GeometryDrawing Brush="White">
+                                    <GeometryDrawing.Geometry>
+                                        <RectangleGeometry Rect="0,0 100,100" />
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                                <GeometryDrawing Brush="LightGray">
+                                    <GeometryDrawing.Geometry>
+                                        <GeometryGroup>
+                                            <RectangleGeometry Rect="0,0 50,50" />
+                                            <RectangleGeometry Rect="50,50 50,50" />
+                                        </GeometryGroup>
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>-->
+                            <DrawingBrush.Drawing>
+                                <DrawingGroup>
+                                    <GeometryDrawing Geometry="M0,0 L10,0 10,10, 0,10Z" Brush="{Binding BackgroundColor1}" />
+                                    <GeometryDrawing Geometry="M0,5 L10,5 10,10, 5,10 5,0 0,0Z" Brush="{Binding BackgroundColor2}"/>
+                                </DrawingGroup>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
+
+                    </Rectangle.Fill>
+
+                </Rectangle>
+                <Image x:Name="BackgroundImage"   Stretch="Fill"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" Width="1920" Height="1080" 
+                       gg:DragDrop.DropHandler="{Binding}" gg:DragDrop.IsDropTarget="True" gg:DragDrop.DropAdornerTemplate="{StaticResource PupilDragAdorner}"/>
+
+                <ItemsControl ItemsSource="{Binding MyCockpitViewModels}" >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <!--<Border BorderThickness="{Binding IsUCSelected, Converter={StaticResource MyConverterMargin}}" BorderBrush="Red" >-->
+                            <AdornerDecorator >
+                                <ContentControl cal:View.Model="{Binding .}" 
+                                            cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnContentControl($source)];[Event Loaded] = [Action ContentControlLoaded($source)]">
+                                </ContentControl>
+                            </AdornerDecorator>
+                            <!--</Border>-->
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <!-- Replace panel with a canvas -->
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <!-- Set position of each element in the canvas -->
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="{x:Type ContentPresenter}">
+                            <Setter Property="Canvas.Left" Value="{Binding Layout.UCLeft}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Layout.UCTop}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+
+                </ItemsControl>
+                <!--<Image Source="/CockpitBuilder;component/Resources/ToolBar/AlignTop.png" Width="50" Height="50" Margin="100,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

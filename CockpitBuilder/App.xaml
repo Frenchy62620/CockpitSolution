@@ -1,0 +1,48 @@
+﻿<Application x:Class="CockpitBuilder.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:CockpitBuilder"
+             xmlns:converters="clr-namespace:CockpitBuilder.Common.Converters"
+             xmlns:bootstrap="clr-namespace:CockpitBuilder.Bootstrapper">
+    <Application.Resources>
+        <ResourceDictionary Source="Themes\Expression2010.xaml">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <bootstrap:Bootstrapper x:Key="Bootstrapper" />
+                    <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+                    <converters:MyConverterAdorner x:Key="MyConverterAdorner" />
+                    <converters:MyConverterSize x:Key="MyConverterSize" />
+                    <converters:MyConverterMargin x:Key="MyConverterMargin" />
+                    <converters:MyconverterColorToSolidColorBrush x:Key="MyconverterColorToSolidColorBrush" />
+                    <converters:MyMultiConverterMargin x:Key="MyMultiConverterMargin" />
+                    <converters:MultiplyConverter x:Key="MultiplyConverter" />
+                    <converters:FormatNumber x:Key="MyFormatNumber" />
+                    
+                    <Style  x:Key="IsModeEdit" TargetType="{x:Type Rectangle}" >
+                        <Setter Property="Stroke" Value="CornflowerBlue"></Setter>
+                        <Setter Property="Fill" Value="#00EEDB21"></Setter>
+                        <Setter Property="StrokeThickness" Value="0"></Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Frame}" Value="True">
+                                <Setter Property="StrokeThickness" Value="1"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Style x:Key="IsModeSelected" TargetType="{x:Type Rectangle}">
+                        <Setter Property="Fill" Value="#00EEDB21"></Setter>
+                        <Setter Property="StrokeThickness" Value="0"></Setter>
+                        <!--<Setter Property="StrokeThickness" Value="4"></Setter>-->
+                        <Setter Property="Stroke" Value="Orange"></Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                <Setter Property="Stroke" Value="Green"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

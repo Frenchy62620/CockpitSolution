@@ -1,0 +1,520 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{76873285-7089-47DA-8ECA-4668FA857180}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>CockpitBuilder</RootNamespace>
+    <AssemblyName>CockpitBuilder</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Caliburn.Micro, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.3.2.0\lib\net45\Caliburn.Micro.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GongSolutions.WPF.DragDrop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=91f1945125b7a587, processorArchitecture=MSIL">
+      <HintPath>..\packages\gong-wpf-dragdrop.2.0.1\lib\net47\GongSolutions.WPF.DragDrop.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2013, Version=2.9.0.1, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xceed.Wpf.AvalonDock.Themes.VS2013.2.9.0.1\lib\net40-client\Xceed.Wpf.AvalonDock.Themes.VS2013.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Common\Converters\BindingProxy.cs" />
+    <Compile Include="Common\Converters\EnumConverter.cs" />
+    <Compile Include="Common\Converters\EnumDisplayEntry.cs" />
+    <Compile Include="Common\Converters\MyConverter.cs" />
+    <Compile Include="Common\CustomControls\ColorPicker\ColorPicker.cs" />
+    <Compile Include="Common\CustomControls\ColorPicker\ColorPickerDialogView.xaml.cs">
+      <DependentUpon>ColorPickerDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\CustomControls\ColorPicker\ColorPickerSupport.cs" />
+    <Compile Include="Common\CustomControls\ColorPicker\ColorWellView.xaml.cs">
+      <DependentUpon>ColorWellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\CustomControls\FolderPicker\FolderPickerView.xaml.cs">
+      <DependentUpon>FolderPickerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\CustomControls\FontPicker\FontChooserDialogView.xaml.cs">
+      <DependentUpon>FontChooserDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\CustomControls\FontPicker\FontFamilyListItem.cs" />
+    <Compile Include="Common\CustomControls\FontPicker\FontPickerView.xaml.cs">
+      <DependentUpon>FontPickerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\CustomControls\NotificationObject.cs" />
+    <Compile Include="Common\CustomControls\FontPicker\TextDecorations.cs" />
+    <Compile Include="Common\CustomControls\FontPicker\TextFormat.cs" />
+    <Compile Include="Common\CustomControls\FontPicker\TypefaceListItem.cs" />
+    <Compile Include="Common\CustomControls\IPropertyNotification.cs" />
+    <Compile Include="Common\CustomControls\PropertyNotificationEventArgs.cs" />
+    <Compile Include="Common\CustomControls\PushbuttonType.cs" />
+    <Compile Include="Common\CustomControls\TextVerticalAlignment.cs" />
+    <Compile Include="Common\CustomControls\TextHorizontalAlignment.cs" />
+    <Compile Include="Common\PropertyEditors\EnumBindingSourceExtension.cs" />
+    <Compile Include="Common\PropertyEditors\EnumDescriptionTypeConverter.cs" />
+    <Compile Include="Common\PropertyEditors\LayoutPropertyEditorView.xaml.cs">
+      <DependentUpon>LayoutPropertyEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\PropertyEditors\LayoutPropertyEditorViewModel.cs" />
+    <Compile Include="Common\PropertyEditors\MonitorPropertyEditorView.xaml.cs">
+      <DependentUpon>MonitorPropertyEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\PropertyEditors\MonitorPropertyEditorViewModel.cs" />
+    <Compile Include="Common\PropertyEditors\PropertyEditorModel.cs" />
+    <Compile Include="Common\PropertyEditors\PushButtonAppearanceEditorView.xaml.cs">
+      <DependentUpon>PushButtonAppearanceEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\PropertyEditors\PushButtonAppearanceEditorViewModel.cs" />
+    <Compile Include="Common\PropertyEditors\PushButtonBehaviorEditorView.xaml.cs">
+      <DependentUpon>PushButtonBehaviorEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\PropertyEditors\PushButtonBehaviorEditorViewModel.cs" />
+    <Compile Include="Common\PropertyEditors\PushButtonGlyph.cs" />
+    <Compile Include="Common\PropertyEditors\PushButtonType.cs" />
+    <Compile Include="Common\PropertyEditors\SwitchRotation.cs" />
+    <Compile Include="Common\PropertyEditors\SwitchPosition.cs" />
+    <Compile Include="Common\PropertyEditors\SwitchOrientation.cs" />
+    <Compile Include="Common\PropertyEditors\SwitchType.cs" />
+    <Compile Include="Common\PropertyEditors\TextHorizontalAlignment.cs" />
+    <Compile Include="Common\PropertyEditors\ThreeWayToggleSwitchAppearanceEditorView.xaml.cs">
+      <DependentUpon>ThreeWayToggleSwitchAppearanceEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\PropertyEditors\ThreeWayToggleSwitchAppearanceEditorViewModel.cs" />
+    <Compile Include="Common\PropertyEditors\ThreeWayToggleSwitchBehaviorEditorView.xaml.cs">
+      <DependentUpon>ThreeWayToggleSwitchBehaviorEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\PropertyEditors\ThreeWayToggleSwitchBehaviorEditorViewModel.cs" />
+    <Compile Include="Common\PropertyEditors\TextVerticalAlignment.cs" />
+    <Compile Include="Common\Resources\ResourceHelper.cs" />
+    <Compile Include="Common\Strategies\ProfileDialogStrategy.cs" />
+    <Compile Include="Common\Converters\MyMultiConverter.cs" />
+    <Compile Include="Common\CustomControls\ImagePicker\ImagePickerView.xaml.cs">
+      <DependentUpon>ImagePickerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Events\ActiveScriptDocumentChangedEvent.cs" />
+    <Compile Include="Events\DisplayPropertiesView1Event.cs" />
+    <Compile Include="Events\DisplayPropertiesViewEvent.cs" />
+    <Compile Include="Events\PushButtonAppearanceEvent.cs" />
+    <Compile Include="Events\ThreeWayToggleSwitchAppearanceEvent.cs" />
+    <Compile Include="Events\PushButtonBehaviorEvent.cs" />
+    <Compile Include="Events\ThreeWayToggleSwitchBehaviorEvent.cs" />
+    <Compile Include="Events\PropertyLayoutEvent.cs" />
+    <Compile Include="Events\PropertyMonitorEvent.cs" />
+    <Compile Include="Events\PropertyHas3ImagesEvent.cs" />
+    <Compile Include="Events\PropertyHasIndicatorEvent.cs" />
+    <Compile Include="Events\BackgroundColorEvent.cs" />
+    <Compile Include="Events\BackgroundImageEvent.cs" />
+    <Compile Include="Events\ExitingEvent.cs" />
+    <Compile Include="Events\EditEvent.cs" />
+    <Compile Include="Events\DevicePropertiesEvent.cs" />
+    <Compile Include="Events\FolderNameEvent.cs" />
+    <Compile Include="Events\SelectedEvent.cs" />
+    <Compile Include="Events\TransformEvent.cs" />
+    <Compile Include="Events\VisibilityPanelEvent.cs" />
+    <Compile Include="Events\MonitorStartedEvent.cs" />
+    <Compile Include="Events\ScriptDocumentAddedEvent.cs" />
+    <Compile Include="Events\DragSelectedItemEvent.cs" />
+    <Compile Include="NativeMethods\DisplayOrientation.cs" />
+    <Compile Include="NativeMethods\NativeMethods.cs" />
+    <Compile Include="Plugins\A_10C\Panel_View.xaml.cs">
+      <DependentUpon>Panel_View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\A_10C\Panel_ViewModel.cs" />
+    <Compile Include="Plugins\General\PushButton_View.xaml.cs">
+      <DependentUpon>PushButton_View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\General\Switch1_View.xaml.cs">
+      <DependentUpon>Switch1_View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\General\PushButton_ViewModel.cs" />
+    <Compile Include="Plugins\General\Switch_View.xaml.cs">
+      <DependentUpon>Switch_View.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\General\Switch1_ViewModel.cs" />
+    <Compile Include="Plugins\General\Switch_ViewModel.cs" />
+    <Compile Include="Plugins\PluginModel.cs" />
+    <Compile Include="Result\CancelResult.cs" />
+    <Compile Include="Result\CloseAppResult.cs" />
+    <Compile Include="Result\CloseResult.cs" />
+    <Compile Include="Result\FileDialogResult.cs" />
+    <Compile Include="Result\IResultFactory.cs" />
+    <Compile Include="Result\MessageBoxResult.cs" />
+    <Compile Include="Result\Result.cs" />
+    <Compile Include="Result\ResultFactory.cs" />
+    <Compile Include="Result\ShowDialogResult.cs" />
+    <Compile Include="Shells\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shells\AboutViewModel.cs" />
+    <Compile Include="Shells\MainShellView.xaml.cs">
+      <DependentUpon>MainShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shells\MainShellViewModel.cs" />
+    <Compile Include="Shells\ShellPresentationModel.cs" />
+    <Compile Include="Views\Main\DockPanel\Models\DisplayManager.cs" />
+    <Compile Include="Views\Main\DockPanel\Models\Monitor.cs" />
+    <Compile Include="Views\Main\DockPanel\Models\MonitorCollection.cs" />
+    <Compile Include="Views\Main\DockPanel\Models\ToolBoxGroup.cs" />
+    <Compile Include="Views\Main\DockPanel\Models\ToolBoxItem.cs" />
+    <Compile Include="Views\Main\DockPanel\Panels\BindingsView.xaml.cs">
+      <DependentUpon>BindingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\DockPanel\Panels\BindingsViewModel.cs" />
+    <Compile Include="Views\Main\DockPanel\Panels\LayersTabView.xaml.cs">
+      <DependentUpon>LayersTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\DockPanel\Panels\LayersTabViewModel.cs" />
+    <Compile Include="Views\Main\DockPanel\Panels\MonitorView.xaml.cs">
+      <DependentUpon>MonitorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\DockPanel\Panels\MonitorViewModel.cs" />
+    <Compile Include="Views\Main\DockPanel\Panels\MyAdorner.cs" />
+    <Compile Include="Views\Main\DockPanel\Panels\PreviewTabView.xaml.cs">
+      <DependentUpon>PreviewTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\DockPanel\Panels\PreviewTabViewModel.cs" />
+    <Compile Include="Views\Main\DockPanel\Panels\ProfileTabView.xaml.cs">
+      <DependentUpon>ProfileTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\DockPanel\Panels\ProfileTabViewModel.cs" />
+    <Compile Include="Views\Main\DockPanel\Panels\PropertiesTabView.xaml.cs">
+      <DependentUpon>PropertiesTabView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\DockPanel\Panels\PropertiesTabViewModel.cs" />
+    <Compile Include="Views\Main\DockPanel\Panels\ToolBoxView.xaml.cs">
+      <DependentUpon>ToolBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\DockPanel\Panels\ToolBoxViewModel.cs" />
+    <Compile Include="Views\Main\DockPanel\Panels\UserView.xaml.cs">
+      <DependentUpon>UserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\DockPanel\Panels\UserViewModel.cs" />
+    <Compile Include="Views\Main\DockPanel\PanelViewModel.cs" />
+    <Compile Include="Views\Main\Menu\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\Menu\MainMenuViewModel.cs" />
+    <Compile Include="Views\Main\Menu\RecentFileViewModel.cs" />
+    <Compile Include="Views\Main\SettingsLoaderViewModel.cs" />
+    <Compile Include="Views\Main\ToolBarTray\MainToolBarTrayView.xaml.cs">
+      <DependentUpon>MainToolBarTrayView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Main\ToolBarTray\MainToolBarTrayViewModel.cs" />
+    <Page Include="Common\CustomControls\ColorPicker\ColorPickerDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\CustomControls\ColorPicker\ColorWellView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\CustomControls\FolderPicker\FolderPickerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\CustomControls\FontPicker\FontChooserDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\CustomControls\ImagePicker\ImagePickerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Bootstrapper\Bootstrapper.cs" />
+    <Compile Include="Common\AvalonDock\AutobinderTemplateSelector.cs" />
+    <Compile Include="Common\AvalonDock\DocumentContext.cs" />
+    <Compile Include="Common\AvalonDock\IDockingManagerSource.cs" />
+    <Compile Include="Common\Caliburn\ActionMessageCommand.cs" />
+    <Compile Include="Common\Caliburn\GestureMenuItem.cs" />
+    <Compile Include="Common\Caliburn\InputBindingTrigger.cs" />
+    <Page Include="Common\CustomControls\FontPicker\FontPickerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\PropertyEditors\LayoutPropertyEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\PropertyEditors\MonitorPropertyEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\PropertyEditors\PushButtonAppearanceEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\PropertyEditors\PushButtonBehaviorEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\PropertyEditors\ThreeWayToggleSwitchAppearanceEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Common\PropertyEditors\ThreeWayToggleSwitchBehaviorEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plugins\A_10C\Panel_View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plugins\General\PushButton_View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plugins\General\Switch1_View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plugins\General\Switch_View.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shells\AboutView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Shells\MainShellView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Expression2010.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ExpressionDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\DockPanel\Panels\BindingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\DockPanel\Panels\LayersTabView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\DockPanel\Panels\MonitorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\DockPanel\Panels\PreviewTabView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\DockPanel\Panels\ProfileTabView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\DockPanel\Panels\PropertiesTabView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\DockPanel\Panels\ToolBoxView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\DockPanel\Panels\UserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Main\Menu\MainMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Main\ToolBarTray\MainToolBarTrayView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CockpitBuilder.Core.Contracts\CockpitBuilder.Core.Contracts.csproj">
+      <Project>{79DFD558-6EB3-4430-8512-CADA6C9209AC}</Project>
+      <Name>CockpitBuilder.Core.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CockpitBuilder.Core\CockpitBuilder.Core.csproj">
+      <Project>{165d92e9-ac43-4f9c-8c60-37fb5e01193e}</Project>
+      <Name>CockpitBuilder.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Menu\about-16.png" />
+    <Resource Include="Resources\Menu\add-16.png" />
+    <Resource Include="Resources\Menu\arrow-16.png" />
+    <Resource Include="Resources\Menu\console-16.png" />
+    <Resource Include="Resources\Menu\copy-16.png" />
+    <Resource Include="Resources\Menu\curve-16.png" />
+    <Resource Include="Resources\Menu\cut-16.png" />
+    <Resource Include="Resources\Menu\delete-16.png" />
+    <Resource Include="Resources\Menu\edit-16.png" />
+    <Resource Include="Resources\Menu\error-16.png" />
+    <Resource Include="Resources\Menu\exception-16.png" />
+    <Resource Include="Resources\Menu\exit-16.png" />
+    <Resource Include="Resources\Menu\find-16.png" />
+    <Resource Include="Resources\Menu\help-16.png" />
+    <Resource Include="Resources\Menu\minus-16.png" />
+    <Resource Include="Resources\Menu\minus-2-16.png" />
+    <Resource Include="Resources\Menu\new-16.png" />
+    <Resource Include="Resources\Menu\next-16.png" />
+    <Resource Include="Resources\Menu\open-16.png" />
+    <Resource Include="Resources\Menu\paste-16.png" />
+    <Resource Include="Resources\Menu\play-16.png" />
+    <Resource Include="Resources\Menu\plus-16.png" />
+    <Resource Include="Resources\Menu\plus-2-16.png" />
+    <Resource Include="Resources\Menu\prev-16.png" />
+    <Resource Include="Resources\Menu\save-16.png" />
+    <Resource Include="Resources\Menu\save-as-16.png" />
+    <Resource Include="Resources\Menu\settings-16.png" />
+    <Resource Include="Resources\Menu\stop-16.png" />
+    <Resource Include="Resources\Menu\warning-16.png" />
+    <Resource Include="Resources\Menu\watch-16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ToolBar\AlignBottom.png" />
+    <Resource Include="Resources\ToolBar\AlignHCenter.png" />
+    <Resource Include="Resources\ToolBar\AlignLeft.png" />
+    <Resource Include="Resources\ToolBar\AlignRight.png" />
+    <Resource Include="Resources\ToolBar\AlignTop.png" />
+    <Resource Include="Resources\ToolBar\AlignVCenter.png" />
+    <Resource Include="Resources\ToolBar\BringForwardIcon.png" />
+    <Resource Include="Resources\ToolBar\CopyIcon.png" />
+    <Resource Include="Resources\ToolBar\CutIcon.png" />
+    <Resource Include="Resources\ToolBar\DeleteIcon.png" />
+    <Resource Include="Resources\ToolBar\DistributeHorizontal.png" />
+    <Resource Include="Resources\ToolBar\DistributeVertical.png" />
+    <Resource Include="Resources\ToolBar\HiddenIcon.png" />
+    <Resource Include="Resources\ToolBar\InterfacesIcon.png" />
+    <Resource Include="Resources\ToolBar\LockedIcon.png" />
+    <Resource Include="Resources\ToolBar\NewIcon.png" />
+    <Resource Include="Resources\ToolBar\NoSnapIcon.png" />
+    <Resource Include="Resources\ToolBar\OpenIcon.png" />
+    <Resource Include="Resources\ToolBar\PasteIcon.png" />
+    <Resource Include="Resources\ToolBar\PreviewIcon.png" />
+    <Resource Include="Resources\ToolBar\PreviewStopIcon.png" />
+    <Resource Include="Resources\ToolBar\RedoIcon.png" />
+    <Resource Include="Resources\ToolBar\SaveIcon.png" />
+    <Resource Include="Resources\ToolBar\SendBackIcon.png" />
+    <Resource Include="Resources\ToolBar\SnapIcon.png" />
+    <Resource Include="Resources\ToolBar\SpaceHorizontal.png" />
+    <Resource Include="Resources\ToolBar\SpaceVertical.png" />
+    <Resource Include="Resources\ToolBar\UndoIcon.png" />
+    <Resource Include="Resources\ToolBar\UnLockedIcon.png" />
+    <Resource Include="Resources\ToolBar\VisibleIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ToolBar\Locker.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ToolBar\Unlocker.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
