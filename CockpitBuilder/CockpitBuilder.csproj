@@ -148,7 +148,6 @@
     <Compile Include="Common\PropertyEditors\SwitchPosition.cs" />
     <Compile Include="Common\PropertyEditors\SwitchOrientation.cs" />
     <Compile Include="Common\PropertyEditors\SwitchType.cs" />
-    <Compile Include="Common\PropertyEditors\TextHorizontalAlignment.cs" />
     <Compile Include="Common\PropertyEditors\ThreeWayToggleSwitchAppearanceEditorView.xaml.cs">
       <DependentUpon>ThreeWayToggleSwitchAppearanceEditorView.xaml</DependentUpon>
     </Compile>
@@ -157,7 +156,6 @@
       <DependentUpon>ThreeWayToggleSwitchBehaviorEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\PropertyEditors\ThreeWayToggleSwitchBehaviorEditorViewModel.cs" />
-    <Compile Include="Common\PropertyEditors\TextVerticalAlignment.cs" />
     <Compile Include="Common\Resources\ResourceHelper.cs" />
     <Compile Include="Common\Strategies\ProfileDialogStrategy.cs" />
     <Compile Include="Common\Converters\MyMultiConverter.cs" />
@@ -167,6 +165,8 @@
     <Compile Include="Events\ActiveScriptDocumentChangedEvent.cs" />
     <Compile Include="Events\DisplayPropertiesView1Event.cs" />
     <Compile Include="Events\DisplayPropertiesViewEvent.cs" />
+    <Compile Include="Events\NewAppearanceEvent.cs" />
+    <Compile Include="Events\NewLayoutEvent.cs" />
     <Compile Include="Events\PushButtonAppearanceEvent.cs" />
     <Compile Include="Events\ThreeWayToggleSwitchAppearanceEvent.cs" />
     <Compile Include="Events\PushButtonBehaviorEvent.cs" />
@@ -193,6 +193,8 @@
       <DependentUpon>Panel_View.xaml</DependentUpon>
     </Compile>
     <Compile Include="Plugins\A_10C\Panel_ViewModel.cs" />
+    <Compile Include="Plugins\General\PushButtonLayout.cs" />
+    <Compile Include="Plugins\General\PushButtonAppearance.cs" />
     <Compile Include="Plugins\General\PushButton_View.xaml.cs">
       <DependentUpon>PushButton_View.xaml</DependentUpon>
     </Compile>
@@ -205,6 +207,7 @@
     </Compile>
     <Compile Include="Plugins\General\Switch1_ViewModel.cs" />
     <Compile Include="Plugins\General\Switch_ViewModel.cs" />
+    <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\PluginModel.cs" />
     <Compile Include="Result\CancelResult.cs" />
     <Compile Include="Result\CloseAppResult.cs" />

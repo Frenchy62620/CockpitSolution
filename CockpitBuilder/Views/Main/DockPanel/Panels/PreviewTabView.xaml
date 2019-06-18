@@ -26,7 +26,7 @@
         <ScrollViewer Grid.Row="0" Grid.Column="1" x:Name="PreviewScroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                       cal:Message.Attach="[Event SizeChanged]=[Action ScrollViewerSizeChanged($eventArgs)]" 
                       >
-            <Grid Width="{Binding Width}" Height="{Binding Height}">
+            <Grid Width="{Binding PreviewWidth}" Height="{Binding PreviewHeight}">
                 <Rectangle x:Name="MainRectangle"  StrokeThickness="4" Stroke="Black"  >
 
                 <Rectangle.Fill>

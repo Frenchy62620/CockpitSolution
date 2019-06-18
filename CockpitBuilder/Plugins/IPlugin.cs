@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CockpitBuilder.Common.PropertyEditors
+namespace CockpitBuilder.Plugins
 {
-    public enum TextHorizontalAlignment
+    public interface IPlugin
     {
-        Left,
-        Center,
-        Right
+        void SetLayout();
     }
 }

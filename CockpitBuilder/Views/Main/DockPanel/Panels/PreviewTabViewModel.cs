@@ -38,8 +38,8 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             //System.Diagnostics.Debug.WriteLine($"h = {d.ActualHeight} w= {d.ActualWidth}");
             ZoomFactor = Math.Min(ScrollWidth / 1920d, ScrollHeight / 1080d);
             SetZoomFactor(ZoomFactor);
-            Width = ZoomFactor * 1920d;
-            Height = ZoomFactor * 1080d;
+            PreviewWidth = ZoomFactor * 1920d;
+            PreviewHeight = ZoomFactor * 1080d;
 
         }
         private double zoomlevel;
@@ -60,27 +60,26 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             set
             {
                 zoomfactor = value;
-                //NotifyOfPropertyChange(() => ZoomFactor);
             }
         }
-        private double height;
-        public double Height
+        private double previewheight;
+        public double PreviewHeight
         {
-            get => height;
+            get => previewheight;
             set
             {
-                height = value;
-                NotifyOfPropertyChange(() => Height);
+                previewheight = value;
+                NotifyOfPropertyChange(() => PreviewHeight);
             }
         }
-        private double width;
-        public double Width
+        private double previewwidth;
+        public double PreviewWidth
         {
-            get => width;
+            get => previewwidth;
             set
             {
-                width = value;
-                NotifyOfPropertyChange(() => Width);
+                previewwidth = value;
+                NotifyOfPropertyChange(() => PreviewWidth);
             }
         }
         private bool showPanels;
@@ -105,15 +104,15 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                 if (value)
                 {
                     SetZoomFactor(1d);
-                    Width =  1920d;
-                    Height = 1080d;
+                    PreviewWidth =  1920d;
+                    PreviewHeight = 1080d;
                 }
                 else
                 {
                     ZoomFactor = Math.Min(ScrollWidth / 1920d, ScrollHeight / 1080d);
                     SetZoomFactor(ZoomFactor);
-                    Width = ZoomFactor * 1920d;
-                    Height = ZoomFactor * 1080d;
+                    PreviewWidth = ZoomFactor * 1920d;
+                    PreviewHeight = ZoomFactor * 1080d;
                 }
                 NotifyOfPropertyChange(() => FullSize);
             }
@@ -178,7 +177,6 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
 
         public void SetZoomFactor(double value)
         {
-            //if (MonitorViewModel.MyCockpitViewModels == null) return;
             MonitorViewModel.ZoomFactor = value;
             foreach (var p in MonitorViewModel.MyCockpitViewModels)
             {

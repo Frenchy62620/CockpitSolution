@@ -1,26 +1,28 @@
-﻿using System;
+﻿using CockpitBuilder.Common.PropertyEditors;
+using CockpitBuilder.Events;
+using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using CockpitBuilder.Common.PropertyEditors;
-using CockpitBuilder.Events;
-using Ninject.Syntax;
+using CockpitBuilder.Common.CustomControls;
 using IEventAggregator = CockpitBuilder.Core.Common.Events.IEventAggregator;
 
 namespace CockpitBuilder.Plugins.General
 {
     public class PushButton_ViewModel : PluginModel, Core.Common.Events.IHandle<EditEvent>,
                                                      Core.Common.Events.IHandle<TransformEvent>,
-                                                     Core.Common.Events.IHandle<SelectedEvent>
+                                                     Core.Common.Events.IHandle<SelectedEvent>,
+                                                     Core.Common.Events.IHandle<NewLayoutEvent>,
+                                                     Core.Common.Events.IHandle<NewAppearanceEvent>,
+                                                     IPlugin
     {
         private readonly IEventAggregator eventAggregator;
         private readonly string tag;
         public PushButtonAppearanceEditorViewModel Appearance { get; }
         public LayoutPropertyEditorViewModel Layout { get; }
-        private readonly PushButtonBehaviorEditorViewModel behavior;
-
+        public  PushButtonBehaviorEditorViewModel behavior;
+        public PushButtonAppearance pushButtonAppearance { get; private set; }
         public PushButton_ViewModel(IEventAggregator eventAggregator, 
                                     LayoutPropertyEditorViewModel layout, 
                                     PushButtonAppearanceEditorViewModel appearance,
@@ -29,9 +31,16 @@ namespace CockpitBuilder.Plugins.General
         {
             //layout.DeviceModel = this;
             //behavior.DeviceModel = this;
+            //TextFormat TextFormat = new TextFormat(fontFamily: "Franklin Gothic",
+            //                                       style: FontStyles.Normal,
+            //                                       weight: FontWeights.Normal,
+            //                                       size: 12d,
+            //                                       padding: new double[] { 0d, 0d, 0d, 0d },
+            //                                       horizontalAlignment: TextHorizontalAlignment.Center,
+            //                                       verticalAlignment: TextVerticalAlignment.Center);
 
             base.IsUCSelected = true;
-            appearance.Layout = layout;
+            //appearance.Layout = layout;
             this.behavior = behavior;
             NameUC = (string)settings[0];
             layout.NameUC = NameUC;
@@ -40,6 +49,9 @@ namespace CockpitBuilder.Plugins.General
             layout.Width = (int)settings[6];
             layout.Height = (int)settings[7];
             layout.AngleRotation = (int)settings[3];
+
+            PluginWidth = (int)settings[6];
+            PluginHeight = (int)settings[7];
 
             appearance.Image = (string)settings[4];
             appearance.PushedImage = (string)settings[5];
@@ -60,7 +72,20 @@ namespace CockpitBuilder.Plugins.General
 
             ScaleX = (double)settings[9];
 
-            appearance.IndexImage = (int)settings[10];
+            //appearance.IndexImage = (int)settings[10];
+
+            pushButtonAppearance = new PushButtonAppearance(nameUC: (string)settings[0], 
+                                                            images: new string[] { (string)settings[4], (string)settings[5] }, 
+                                                            startimageposition: (int)settings[10], 
+                                                            textformat: new TextFormat(fontFamily: "Franklin Gothic",
+                                                                                       style: FontStyles.Normal,
+                                                                                       weight: FontWeights.Normal,
+                                                                                       size: 12d,
+                                                                                       padding: new double[] { 0d, 0d, 0d, 0d },
+                                                                                       horizontalAlignment: TextHorizontalAlignment.Center,
+                                                                                       verticalAlignment: TextVerticalAlignment.Center
+                                                                                      )
+                                                           );
 
             eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)layout, appearance, behavior }));
 
@@ -80,6 +105,34 @@ namespace CockpitBuilder.Plugins.General
 
         #endregion
 
+        private double pluginwidth;
+        public double PluginWidth
+        {
+            get => pluginwidth;
+            set
+            {
+                if (pluginwidth != value)
+                {
+                    pluginwidth = value;
+                    NotifyOfPropertyChange(() => PluginWidth);
+                }
+            }
+        }
+
+        private double pluginheight;
+        public double PluginHeight
+        {
+            get => pluginheight;
+            set
+            {
+                if (pluginheight != value)
+                {
+                    pluginheight = value;
+                    NotifyOfPropertyChange(() => PluginHeight);
+                }
+            }
+        }
+
 
         #region Mouse Events
         public void MouseLeftButtonDown(IInputElement elem, Point pos, MouseEventArgs e, object t, object dc)
@@ -95,12 +148,12 @@ namespace CockpitBuilder.Plugins.General
             Mouse.Capture((UIElement)elem);
             //((UIElement)elem).CaptureMouse();
             var r = elem as Rectangle;
-            Appearance.IndexImage = 1;
+            pushButtonAppearance.IndexImage = 1;
         }
         public void MouseLeftButtonUp()
         {
             Mouse.Capture(null);
-            Appearance.IndexImage = 0;
+            pushButtonAppearance.IndexImage = 0;
         }
         public void MouseEnter(MouseEventArgs e)
         {
@@ -157,6 +210,27 @@ namespace CockpitBuilder.Plugins.General
         }
         #endregion
 
+        private string image;
+        public string Image
+        {
+            get => image;
+            set
+            {
+                image = value;
+                NotifyOfPropertyChange(() => Image);
+            }
+        }
+
+        private string pushedimage;
+        public string PushedImage
+        {
+            get => pushedimage;
+            set
+            {
+                pushedimage = value;
+                NotifyOfPropertyChange(() => PushedImage);
+            }
+        }
 
 
         #region HandleEvents
@@ -202,6 +276,23 @@ namespace CockpitBuilder.Plugins.General
             {
                 IsSelected = !IsSelected;
             }
+        }
+
+        public void SetLayout()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Handle(NewLayoutEvent message)
+        {
+            //PluginHeight = message.NewLayoutHeight;
+            //PluginWidth = message.NewLayoutWidth;
+        }
+
+        public void Handle(NewAppearanceEvent message)
+        {
+            pushButtonAppearance = (PushButtonAppearance) message.Appearance;
+
         }
         #endregion
     }

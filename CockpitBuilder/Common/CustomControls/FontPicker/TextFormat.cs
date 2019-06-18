@@ -27,22 +27,56 @@ namespace CockpitBuilder.Common.CustomControls
     public class TextFormat : NotificationObject
     {
         private string _displayName = "Franklin Gothic";
-        private FontFamily _family = new FontFamily("Franklin Gothic");
-        private FontStyle _style = FontStyles.Normal;
-        private FontWeight _weight = FontWeights.Normal;
-        private double _size = 12f;
-        private TextHorizontalAlignment _horizontalAlignment = TextHorizontalAlignment.Center;
-        private TextVerticalAlignment _verticalAlignment = TextVerticalAlignment.Top;
+        private FontFamily _family;
+        private FontStyle _style;
+        private FontWeight _weight;
+        private double _size;
+        private TextHorizontalAlignment _horizontalAlignment;
+        private TextVerticalAlignment _verticalAlignment;
         private TextDecorations _decorations;
         private TextDecorationCollection _formattedDecorations;
 
-        private double _textPaddingLeft = 0d;
-        private double _textPaddingTop = 0d;
-        private double _textPaddingRight = 0d;
-        private double _textPaddingBottom = 0d;
+        private double _textPaddingLeft;
+        private double _textPaddingTop;
+        private double _textPaddingRight;
+        private double _textPaddingBottom;
 
         public TextFormat()
         {
+            _family = new FontFamily("Franklin Gothic");
+            _style = FontStyles.Normal;
+            _weight = FontWeights.Normal;
+            _size = 12f;
+
+            _textPaddingLeft = 0d;
+            _textPaddingTop = 0d;
+            _textPaddingRight = 0d;
+            _textPaddingBottom = 0d;
+
+            _horizontalAlignment = TextHorizontalAlignment.Center;
+            _verticalAlignment = TextVerticalAlignment.Top;
+        }
+
+        public TextFormat(string fontFamily, 
+                          FontStyle style, 
+                          FontWeight weight, 
+                          double size, 
+                          double[] padding, 
+                          TextHorizontalAlignment horizontalAlignment, 
+                          TextVerticalAlignment verticalAlignment)
+        {
+            _family = new FontFamily(fontFamily);
+            _style = style;
+            _weight = weight;
+            _size = size;
+
+            _textPaddingLeft = padding[0];
+            _textPaddingTop = padding[1];
+            _textPaddingRight = padding[2];
+            _textPaddingBottom = padding[3];
+
+            _horizontalAlignment = horizontalAlignment;
+            _verticalAlignment = verticalAlignment;
         }
 
         public FontFamily FontFamily

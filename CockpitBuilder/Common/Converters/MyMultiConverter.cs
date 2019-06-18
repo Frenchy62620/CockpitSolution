@@ -52,6 +52,28 @@ namespace CockpitBuilder.Common.Converters
         }
     }
 
+    public class CircleRadiusOrCenterCalculus : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            // Center = new Point(LayoutWidth / 2d, LayoutHeight / 2d)
+            // RadiusX = Math.Min(LayoutWidth, LayoutHeight) / 2d * GlyphScale
+            bool radiusCalculus = values.Length == 3;
+            double width = (double)values[0];
+            double height = (double)values[1];
+
+            if (radiusCalculus)
+                return Math.Min(width, height) / 2d * (double)values[2];
+
+            return new Point(width / 2d, height / 2d);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+    }
     public class CircleScaling : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

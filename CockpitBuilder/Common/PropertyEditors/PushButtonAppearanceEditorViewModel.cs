@@ -12,32 +12,42 @@ using CockpitBuilder.Common.CustomControls;
 
 namespace CockpitBuilder.Common.PropertyEditors
 {
-    public class PushButtonAppearanceEditorViewModel:PropertyEditorModel, Core.Common.Events.IHandle<PushButtonAppearanceEvent>
+    public class PushButtonAppearanceEditorViewModel:PropertyEditorModel, Core.Common.Events.IHandle<PushButtonAppearanceEvent>,
+                                                                          Core.Common.Events.IHandle<NewLayoutEvent>
     {
-        LayoutPropertyEditorViewModel layout;
-        public PushButtonAppearanceEditorViewModel(IEventAggregator eventAggregator)
+        private readonly IEventAggregator eventAggregator;
+        public PushButtonAppearance Appearance { get; }
+        public string NameUC;
+        public PushButtonAppearanceEditorViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
             VAlignTypes = Enum.GetValues(typeof(TextVerticalAlignment)).Cast<TextVerticalAlignment>().ToList();
             HAlignTypes = Enum.GetValues(typeof(TextHorizontalAlignment)).Cast<TextHorizontalAlignment>().ToList();
-            SelectedVAlignType = TextVerticalAlignment.Center;
-            SelectedHAlignType = TextHorizontalAlignment.Center;
+            SelectedVAlignType = CustomControls.TextVerticalAlignment.Center;
+            SelectedHAlignType = CustomControls.TextHorizontalAlignment.Center;
             TextFormat = new TextFormat();
             Name = "Appearance";
 
             //TextColor = Colors.White;
-
+            Appearance = new PushButtonAppearance(nameUC: (string)settings[0],
+                                                  images: new string[] { (string)settings[4], (string)settings[5] }, 
+                                                  startimageposition: (int)settings[10], 
+                                                  textformat: TextFormat);
             eventAggregator.Subscribe(this);
+            this.eventAggregator = eventAggregator;
+            eventAggregator.Publish(new NewAppearanceEvent(new string[] { Image, PushedImage }));
         }
 
-        ~PushButtonAppearanceEditorViewModel()
-        {
-            System.Diagnostics.Debug.WriteLine("sortie pushAppearance");
-        }
+        //~PushButtonAppearanceEditorViewModel()
+        //{
+        //    System.Diagnostics.Debug.WriteLine("sortie pushAppearance");
+        //}
 
-        //public PushButtonAppearanceEditorViewModel AppearancewModel;
-        public LayoutPropertyEditorViewModel Layout;
+        //public LayoutPropertyEditorViewModel Layout;
+
 
         public string Name { get; set; }
+
+        private double LayoutWidth, LayoutHeight;
 
         public IReadOnlyList<TextVerticalAlignment> VAlignTypes { get; }
         public IReadOnlyList<TextHorizontalAlignment> HAlignTypes { get; }
@@ -224,8 +234,15 @@ namespace CockpitBuilder.Common.PropertyEditors
             {
                 image = value;
                 NotifyOfPropertyChange(() => Image);
+                SendEvent();
             }
         }
+
+        private void SendEvent()
+        {
+            eventAggregator.Publish(new NewAppearanceEvent(new string[] { Image, PushedImage }));
+        }
+
         private string pushedimage;
         public string PushedImage
         {
@@ -234,6 +251,7 @@ namespace CockpitBuilder.Common.PropertyEditors
             {
                 pushedimage = value;
                 NotifyOfPropertyChange(() => PushedImage);
+                SendEvent();
             }
         }
         private int indexImage;
@@ -314,7 +332,7 @@ namespace CockpitBuilder.Common.PropertyEditors
         private Point center;
         public Point Center
         {
-            get { return new Point(Layout.Width / 2d, Layout.Height / 2d);  }
+            get { return new Point(LayoutWidth / 2d, LayoutHeight / 2d);  }
             set
             {
                 center = value;
@@ -393,8 +411,8 @@ namespace CockpitBuilder.Common.PropertyEditors
 
         private void DrawCircle()
         {
-            Center = new Point(Layout.Width / 2d, Layout.Height / 2d);
-            RadiusX = Math.Min(Layout.Width, Layout.Height) / 2d * GlyphScale;
+            Center = new Point(LayoutWidth / 2d, LayoutHeight / 2d);
+            RadiusX = Math.Min(LayoutWidth, LayoutHeight) / 2d * GlyphScale;
         }
         private void DrawCaret(bool up = true)
         {
@@ -416,9 +434,9 @@ namespace CockpitBuilder.Common.PropertyEditors
 
         private void DrawArrow(bool Right)
         {
-            double y = Layout.Height / 2d;
-            double arrowLength = Layout.Width * GlyphScale;
-            double padding = (Layout.Width - arrowLength) / 2d;
+            double y = LayoutHeight / 2d;
+            double arrowLength = LayoutWidth * GlyphScale;
+            double padding = (LayoutWidth - arrowLength) / 2d;
             double arrowLineLength = arrowLength * .6d;
             double headHeightOffset = GlyphThickness * 2d;
 
@@ -429,13 +447,13 @@ namespace CockpitBuilder.Common.PropertyEditors
                 StartPoint = new Point(padding, y);
                 EndPoint = new Point(StartPoint.X + arrowLineLength, y);
 
-                MiddlePoint = new Point(Layout.Width - padding, y);
+                MiddlePoint = new Point(LayoutWidth - padding, y);
                 Head1Point = new Point(EndPoint.X, y - headHeightOffset);
                 Head2Point = new Point(EndPoint.X, y + headHeightOffset);
             }
             else
             {
-                StartPoint = new Point(Layout.Width - padding, y);
+                StartPoint = new Point(LayoutWidth - padding, y);
                 EndPoint = new Point(StartPoint.X - arrowLineLength, y);
 
                 MiddlePoint = new Point(padding, y);
@@ -449,6 +467,13 @@ namespace CockpitBuilder.Common.PropertyEditors
         {
             Image = message.Image[0];
             PushedImage = message.Image[1];
+        }
+
+        public void Handle(NewLayoutEvent message)
+        {
+            LayoutHeight = message.NewLayoutHeight;
+            LayoutWidth = message.NewLayoutWidth;
+            DrawGlyph(GlyphSelected);
         }
     }
 }

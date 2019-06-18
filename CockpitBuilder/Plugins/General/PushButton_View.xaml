@@ -19,14 +19,14 @@
         </TransformGroup>
     </UserControl.RenderTransform>
 
-    <Grid x:Name="Switch"  Width="{Binding Path=Layout.Width}" Height="{Binding Path=Layout.Height}" >
-        <Image x:Name="Pushed" Source="{Binding Appearance.PushedImage}"
+    <Grid x:Name="Switch"  Width="{Binding Path=PluginWidth}" Height="{Binding Path=PluginHeight}" >
+        <Image x:Name="Pushed" Source="{Binding pushButtonAppearance.PushedImage}"
                HorizontalAlignment="Center" VerticalAlignment="Center" >
             <Image.Style>
                 <Style TargetType="{x:Type Image}">
                     <Setter Property="Visibility" Value="Hidden" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Appearance.IndexImage}" Value="1">
+                        <DataTrigger Binding="{Binding pushButtonAppearance.IndexImage}" Value="1">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -34,13 +34,13 @@
             </Image.Style>
         </Image>
 
-        <Image x:Name="Normal" Source="{Binding Appearance.Image}"
+        <Image x:Name="Normal" Source="{Binding pushButtonAppearance.Image}"
                HorizontalAlignment="Center" VerticalAlignment="Center" >
             <Image.Style>
                 <Style TargetType="{x:Type Image}">
                     <Setter Property="Visibility" Value="Hidden" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Appearance.IndexImage}" Value="0">
+                        <DataTrigger Binding="{Binding pushButtonAppearance.IndexImage}" Value="0">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -65,7 +65,7 @@
             <TextBlock.Style>
                 <Style TargetType="TextBlock" >
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Appearance.IndexImage}" Value="1">
+                        <DataTrigger Binding="{Binding pushButtonAppearance.IndexImage}" Value="1">
                             <Setter Property="RenderTransform" >
                                 <Setter.Value>
                                     <TransformGroup >
@@ -97,8 +97,30 @@
                 </Style>
             </Path.Style>
             <Path.Data>
-                <EllipseGeometry Center="{Binding Appearance.Center, Mode=TwoWay}" RadiusX="{Binding Appearance.RadiusX, Mode=TwoWay}" RadiusY="{Binding Appearance.RadiusX, Mode=TwoWay}" />
+                <EllipseGeometry x:Name="Ellipse">
+                    <EllipseGeometry.Center>
+                        <MultiBinding Converter="{StaticResource CircleRadiusOrCenterCalculus}">
+                            <Binding ElementName="Switch" Path="Width"/>
+                            <Binding ElementName="Switch" Path="Height"/>
+                        </MultiBinding>
+                    </EllipseGeometry.Center>
+                    <EllipseGeometry.RadiusX>
+                        <MultiBinding Converter="{StaticResource CircleRadiusOrCenterCalculus}">
+                            <Binding ElementName="Switch" Path="Width"/>
+                            <Binding ElementName="Switch" Path="Height"/>
+                            <Binding Path="pushButtonAppearance.GlyphScale"/>
+                        </MultiBinding>
+                    </EllipseGeometry.RadiusX>
+                    <EllipseGeometry.RadiusY>
+                        <Binding ElementName="Ellipse" Path="RadiusX"/>
+                    </EllipseGeometry.RadiusY>
+                </EllipseGeometry>
             </Path.Data>
+
+            <!--<Path.Data>
+                <EllipseGeometry Center="{Binding Appearance.Center, Mode=TwoWay}" RadiusX="{Binding Appearance.RadiusX, Mode=TwoWay}" RadiusY="{Binding Appearance.RadiusX, Mode=TwoWay}" />
+            </Path.Data>-->
+
         </Path>
         <Path  x:Name="Arrows" StrokeThickness="{Binding Appearance.GlyphThickness}" Fill="{Binding RelativeSource={RelativeSource Self}, Path=Stroke}"
                                Stroke="{Binding ElementName=Circle, Path=Stroke}" >

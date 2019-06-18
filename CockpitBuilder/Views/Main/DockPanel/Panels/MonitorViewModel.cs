@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using CockpitBuilder.Common.CustomControls;
 using CockpitBuilder.Common.PropertyEditors;
 using CockpitBuilder.Core.Common;
 using CockpitBuilder.Events;
@@ -205,13 +206,8 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                 }
             }
 
-
             MyAdorner myAdorner = new MyAdorner(s);
             adornerLayer.Add(myAdorner);
-            // myAdorner.Visibility = Visibility.Hidden;
-
-            //eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)t.Layout, Appearance, behavior }));
-            //UnselectAll();
         }
 
         void IDropTarget.DragOver(IDropInfo dropInfo)
@@ -246,6 +242,8 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
 
             Tag = Tag + 1;
 
+            Ninject.Parameters.Parameter[] paramproperties;
+            string[] properties;
             string model;
             if (FullImage.Contains("mfd"))
             {
@@ -259,7 +257,34 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                             tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight,
                             0, 1d, 0, 3 }, true)
                 };
+
                 model = "CockpitBuilder.Plugins.General.PushButton_ViewModel";
+                properties = new string[] { "CockpitBuilder.Common.PropertyEditors.LayoutPropertyEditorViewModel",
+                                            "CockpitBuilder.Common.PropertyEditors.PushButtonAppearanceEditorViewModel",
+                                            "CockpitBuilder.Common.PropertyEditors.PushButtonBehaviorEditorViewModel"};
+
+
+                paramproperties = new Ninject.Parameters.Parameter[]
+                {
+                    // Layout
+                    new ConstructorArgument("settings", new object[]{
+                        $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            // name of UC
+                        new double[]{ left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight }, 0,  // Left, Top, Width, Height, Angle
+                        tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0,                             
+                        0, 1d, 0, 3 }, true),
+                    // Appearance
+                    new ConstructorArgument("settings", new object[]{
+                        $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            // name of UC
+                        new string[]{ FullImage, FullImage1 }, 0,                                                               // images, start image position
+                        new TextFormat() }, true),
+                    // Behavior
+                    new ConstructorArgument("settings", new object[]{
+                        $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            // name of UC
+
+                        0, 1d, 0, 3 }, true)
+                };
+
+
             }
             else
             {
@@ -278,6 +303,7 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                 };
 
                 model = "CockpitBuilder.Plugins.General.Switch1_ViewModel";
+                properties = new string[] { "", "", "" };
             }
 
             var typeClass = Type.GetType(model);
@@ -290,6 +316,14 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             UnselectAll();
             MyCockpitViewModels.Add((PluginModel)viewmodel);
             eventAggregator.Publish(new DragSelectedItemEvent(tbg.SelectedToolBoxItem));
+
+            foreach(var p in properties)
+            {
+
+            }
+
+
+            //eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)layout, appearance, behavior }));
         }
 
 
@@ -366,14 +400,6 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
         }
 
         public Type DataType => typeof(MonitorViewModel);
-
-
-        public string TestIFNameAlreadyExist(string n)
-        {
-            var r = MyCockpitViewModels.Select(uc => uc.NameUC.Equals(n));
-            MyCockpitViewModels.Apply(t => t.NameUC.Contains(n));
-            return n;
-        }
 
         //public void Handle(DragSelectedItemEvent message)
         //{

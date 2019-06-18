@@ -1,33 +1,21 @@
-﻿using CockpitBuilder.Events;
-using CockpitBuilder.Plugins;
-using CockpitBuilder.Plugins.General;
-using System.Windows;
-using System.Windows.Controls;
-using IEventAggregator = CockpitBuilder.Core.Common.Events.IEventAggregator;
+﻿using Caliburn.Micro;
+using CockpitBuilder.Common.CustomControls;
+using CockpitBuilder.Common.PropertyEditors;
 
-namespace CockpitBuilder.Common.PropertyEditors
+namespace CockpitBuilder.Plugins.General
 {
-    public class LayoutPropertyEditorViewModel:PropertyEditorModel/*, Core.Common.Events.IHandle<PropertyLayoutEvent>*/
+    public class PushButtonLayout : PropertyChangedBase
     {
-        private readonly IEventAggregator eventAggregator;
-   
-        public bool Linked = true;
-        public LayoutPropertyEditorViewModel(IEventAggregator eventAggregator/*, params object[] settings*/)
+        public TextFormat TextFormat { get; }
+        public PushButtonLayout(string nameUC, double [] layout, int ucangle, string[] images, int startimageposition)
         {
-            this.eventAggregator = eventAggregator;
-            Name = "Layout";
-            ImageIndex = 0;
-            eventAggregator.Subscribe(this);
+            NameUC = nameUC;
+            UCLeft = layout[0];
+            UCTop = layout[1];
+            Width = layout[2];
+            Height = layout[3];
+            AngleRotation = ucangle;
         }
-        ~LayoutPropertyEditorViewModel()
-        {
-            System.Diagnostics.Debug.WriteLine("sortie Layout");
-        }
-
-        private string OldText;
-        private string NewText;
-
-        public string Name { get; set; }
 
         private string nameUC;
         public string NameUC
@@ -62,6 +50,8 @@ namespace CockpitBuilder.Common.PropertyEditors
             }
         }
 
+        private double ScaleFactor;
+        private bool Linked = true;
         private bool AlreadyCalculated;
         private double width;
         public double Width
@@ -82,7 +72,7 @@ namespace CockpitBuilder.Common.PropertyEditors
                 }
                 width = value;
                 NotifyOfPropertyChange(() => Width);
-                eventAggregator.Publish(new NewLayoutEvent(Width, Height, AngleRotation, NameUC));
+                //eventAggregator.Publish(new NewLayoutEvent(Width, Height, AngleRotation, NameUC));
             }
         }
 
@@ -105,20 +95,10 @@ namespace CockpitBuilder.Common.PropertyEditors
                 }
                 height = value;
                 NotifyOfPropertyChange(() => Height);
-                eventAggregator.Publish(new NewLayoutEvent(Width, Height, AngleRotation, NameUC));
+                //eventAggregator.Publish(new NewLayoutEvent(Width, Height, AngleRotation, NameUC));
             }
         }
 
-        private int imageIndex;
-        public int ImageIndex
-        {
-            get => imageIndex;
-            set
-            {
-                imageIndex = value;
-                NotifyOfPropertyChange(() => ImageIndex);
-            }
-        }
         private SwitchRotation selectedSwitchRotation;
         public SwitchRotation SelectedSwitchRotation
         {
@@ -129,7 +109,6 @@ namespace CockpitBuilder.Common.PropertyEditors
                 NotifyOfPropertyChange(() => SelectedSwitchRotation);
             }
         }
-
         private int angleRotation;
         public int AngleRotation
         {
@@ -141,19 +120,5 @@ namespace CockpitBuilder.Common.PropertyEditors
             }
         }
 
-        public void ChangeLockUnlock()
-        {
-            ImageIndex = 1 - ImageIndex;
-            Linked = !Linked;
-        }
-
-        public void GotFocus(object sender, System.EventArgs e)
-        {
-            OldText = (sender as TextBox).Text;
-        }
-        public void LostFocus(object sender, System.EventArgs e)
-        {
-            NewText = (sender as TextBox).Text;
-        }
     }
 }
