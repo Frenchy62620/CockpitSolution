@@ -11,8 +11,10 @@ namespace CockpitBuilder.Events
     public class DisplayPropertiesView1Event
     {
         public PropertyEditorModel[] Views;
-        public DisplayPropertiesView1Event(PropertyEditorModel[] views)
+        public bool Clear;
+        public DisplayPropertiesView1Event(PropertyEditorModel[] views, bool clear = false)
         {
+            Clear = clear;
             Views = views;
         }
     }

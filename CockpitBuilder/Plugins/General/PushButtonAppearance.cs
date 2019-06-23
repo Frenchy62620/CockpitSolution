@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
 using CockpitBuilder.Common.CustomControls;
+using CockpitBuilder.Common.PropertyEditors;
+using System.Windows.Media;
 
 namespace CockpitBuilder.Plugins.General
 {
@@ -7,16 +9,31 @@ namespace CockpitBuilder.Plugins.General
     {
         public TextFormat TextFormat { get; }
         public string NameUC;
-        public PushButtonAppearance(string nameUC, string[] images, int startimageposition, TextFormat textformat)
+        public PushButtonAppearance(string nameUC,
+                                    string[] images,
+                                    int startimageposition,
+                                    TextFormat textFormat,
+                                    Color textColor,
+                                    int glyphSelected,
+                                    double glyphScale,
+                                    double glyphThickness,
+                                    string glyphText,
+                                    Color glyphColor
+                                   )
         {
             NameUC = nameUC;
             Image = images[0];
             PushedImage = images[1];
             IndexImage = startimageposition;
 
-            TextFormat = textformat;
+            TextFormat = textFormat;
+            TextColor = textColor;
 
-            GlyphScale = 0.8d;
+            SelectedPushButtonGlyph = (PushButtonGlyph) glyphSelected;
+            GlyphScale = glyphScale;
+            GlyphThickness = glyphThickness;
+            GlyphText = glyphText;
+            GlyphColor = glyphColor;
         }
 
         private string image;
@@ -45,20 +62,43 @@ namespace CockpitBuilder.Plugins.General
                 }
             }
         }
-        private int indexImage;
+        private int indeximage;
         public int IndexImage
         {
-            get { return indexImage; }
+            get { return indeximage; }
             set
             {
-                if (indexImage != value)
+                if (indeximage != value)
                 {
-                    indexImage = value;
+                    indeximage = value;
                     NotifyOfPropertyChange(() => IndexImage);
                 }
             }
         }
 
+        private PushButtonGlyph selectedPushButtonGlyph;
+        public PushButtonGlyph SelectedPushButtonGlyph
+        {
+            get => selectedPushButtonGlyph;
+
+            set
+            {
+                selectedPushButtonGlyph = value;
+                GlyphSelected = (int)value;
+                NotifyOfPropertyChange(() => SelectedPushButtonGlyph);
+            }
+        }
+
+        private int glyphselected;
+        public int GlyphSelected
+        {
+            get { return glyphselected; }
+            set
+            {
+                glyphselected = value;
+                NotifyOfPropertyChange(() => GlyphSelected);
+            }
+        }
 
         private double glyphscale;
         public double GlyphScale
@@ -75,6 +115,49 @@ namespace CockpitBuilder.Plugins.General
             }
         }
 
+        private double glyphthickness;
+        public double GlyphThickness
+        {
+            get => glyphthickness;
+            set
+            {
+                glyphthickness = value;
+                NotifyOfPropertyChange(() => GlyphThickness);
+            }
+        }
+
+        private string glyphtext;
+        public string GlyphText
+        {
+            get => glyphtext;
+            set
+            {
+                glyphtext = value;
+                NotifyOfPropertyChange(() => GlyphText);
+            }
+        }
+
+        private Color glyphcolor;
+        public Color GlyphColor
+        {
+            get => glyphcolor;
+            set
+            {
+                glyphcolor = value;
+                NotifyOfPropertyChange(() => GlyphColor);
+            }
+        }
+
+        private Color textcolor;
+        public Color TextColor
+        {
+            get => textcolor;
+            set
+            {
+                textcolor = value;
+                NotifyOfPropertyChange(() => TextColor);
+            }
+        }
         //private Point center;
         //public Point Center
         //{

@@ -7,6 +7,11 @@ namespace CockpitBuilder.Views.Main.DockPanel.Models
     public class DisplayManager
     {
         private int _dpi = 0;
+
+        public DisplayManager()
+        {
+        }
+
         //private MonitorCollection _displayCollection = null;
 
         #region Properties

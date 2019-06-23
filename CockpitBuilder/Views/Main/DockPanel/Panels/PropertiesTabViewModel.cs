@@ -27,7 +27,7 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
 
 
 
-            CreateNewInstancePropertyModel("CockpitBuilder.Common.PropertyEditors.MonitorPropertyEditorViewModel", true);
+            //CreateNewInstancePropertyModel("CockpitBuilder.Common.PropertyEditors.MonitorPropertyEditorViewModel", true);
             //CreateNewInstancePropertyModel("CockpitBuilder.Common.PropertyEditors.LayoutPropertyEditorViewModel");
 
             //var typeClass = Type.GetType("CockpitBuilder.Common.PropertyEditors.MonitorPropertyEditorViewModel");           
@@ -141,7 +141,16 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
 
         public void Handle(DisplayPropertiesView1Event message)
         {
+            if (message.Clear)
+            {
+                PropertyViewModels.Clear();
+                return;
+            }
+
             var viewmodels = message.Views;
+            if (PropertyViewModels.Count > 0 &&  viewmodels[0] == PropertyViewModels[0])
+                return;
+
             PropertyViewModels.Clear();
             foreach (var v in viewmodels)
                 PropertyViewModels.Add(v);

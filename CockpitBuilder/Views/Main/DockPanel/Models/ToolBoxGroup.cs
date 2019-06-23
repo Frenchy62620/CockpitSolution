@@ -1,14 +1,22 @@
 ﻿using Caliburn.Micro;
 using GongSolutions.Wpf.DragDrop;
 using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Input;
 
 namespace CockpitBuilder.Views.Main.DockPanel.Models
 {
-    public class ToolBoxGroup:PropertyChangedBase, IDragSource
+    public class ToolBoxGroup:PropertyChangedBase, IDragSource, IDragInfo
     {
+        public ToolBoxGroup()
+        {
+            Translation = new Point(0, 0);
+            AnchorMouse = new Point(0.5, 0.5);
+        }
 
         private string _groupName;
         public string GroupName
@@ -45,6 +53,30 @@ namespace CockpitBuilder.Views.Main.DockPanel.Models
             }
         }
 
+
+        private Point translation;
+        public Point Translation
+        {
+            get => translation;
+            set
+            {
+                translation = value;
+                NotifyOfPropertyChange(() => Translation);
+            }
+        }
+        private Point anchormouse;
+        public Point AnchorMouse
+        {
+            get => anchormouse;
+            set
+            {
+                anchormouse = value;
+                NotifyOfPropertyChange(() => AnchorMouse);
+            }
+        }
+
+
+
         //public void StartDrag(IDragInfo dragInfo)
         //{
         //    var t = dragInfo.Effects;
@@ -76,6 +108,8 @@ namespace CockpitBuilder.Views.Main.DockPanel.Models
         //}
 
 
+
+
         void IDragSource.StartDrag(IDragInfo dragInfo)
         {
             var itemCount = dragInfo.SourceItems.Cast<object>().Count();
@@ -83,6 +117,8 @@ namespace CockpitBuilder.Views.Main.DockPanel.Models
             if (itemCount == 1)
             {
                 dragInfo.Data = dragInfo.SourceItems.Cast<object>().First();
+                var tbg = dragInfo.Data as ToolBoxGroup;
+                tbg.AnchorMouse = new Point(0.5, 0.5);
             }
             //else if (itemCount > 1)
             //{
@@ -117,22 +153,50 @@ namespace CockpitBuilder.Views.Main.DockPanel.Models
             return true;
         }
 
+        #region IDragInfo
+        public DataFormat DataFormat { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        //public IDragSourceAdvisor DragAdvisor
-        //{
-        //    get
-        //    {
-        //        return _advisor;
-        //    }
-        //    set
-        //    {
-        //        if ((_advisor == null && value != null)
-        //            || (_advisor != null && !_advisor.Equals(value)))
-        //        {
-        //            _advisor = value;
-        //        }
-        //    }
-        //}
+        public object Data
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
 
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public Point DragStartPosition => throw new NotImplementedException();
+
+        public Point PositionInDraggedItem => throw new NotImplementedException();
+
+        public DragDropEffects Effects { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public MouseButton MouseButton => throw new NotImplementedException();
+
+        public IEnumerable SourceCollection => throw new NotImplementedException();
+
+        public int SourceIndex => throw new NotImplementedException();
+
+        public object SourceItem => throw new NotImplementedException();
+
+        public IEnumerable SourceItems => throw new NotImplementedException();
+
+        public CollectionViewGroup SourceGroup => throw new NotImplementedException();
+
+        public UIElement VisualSource => throw new NotImplementedException();
+
+        public UIElement VisualSourceItem => throw new NotImplementedException();
+
+        public FlowDirection VisualSourceFlowDirection => throw new NotImplementedException();
+
+        public object DataObject { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Func<DependencyObject, object, DragDropEffects, DragDropEffects> DragDropHandler { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public DragDropKeyStates DragDropCopyKeyState => throw new NotImplementedException();
+        #endregion
     }
 }

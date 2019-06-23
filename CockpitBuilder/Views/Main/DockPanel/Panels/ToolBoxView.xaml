@@ -70,8 +70,8 @@
                                        gg:DragDrop.IsDragSource="True" gg:DragDrop.IsDropTarget="True" 
                                        gg:DragDrop.DragAdornerTemplate="{StaticResource PupilDragAdorner}"
                                        gg:DragDrop.DragHandler ="{Binding}" 
-                                       gg:DragDrop.DragMouseAnchorPoint="0.5,0.5" 
-                                       gg:DragDrop.DragAdornerTranslation="0, 0">
+                                       gg:DragDrop.DragMouseAnchorPoint="{Binding AnchorMouse, Converter={StaticResource MyConverterAdorner}}" 
+                                       gg:DragDrop.DragAdornerTranslation="{Binding Translation, Converter={StaticResource MyConverterAdorner}}">
                                 </WrapPanel>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>

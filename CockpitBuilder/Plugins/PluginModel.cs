@@ -1,10 +1,16 @@
 ﻿using Caliburn.Micro;
+using CockpitBuilder.Common.PropertyEditors;
 using System.Windows;
 
 namespace CockpitBuilder.Plugins
 {
     public abstract class PluginModel : PropertyChangedBase
     {
+
+        public abstract double Left { get; set; }
+        public abstract double Top { get; set; }
+        public abstract PropertyEditorModel[] GetProperties();
+
         private double zoomfactor;
         public double ZoomFactor
         {

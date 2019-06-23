@@ -24,7 +24,7 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             this.eventAggregator = eventAggregator;
             eventAggregator.Subscribe(this);
             Title = "ToolBox - Select the DeviceType";
-
+            
             //var t = GetNamespacesInAssembly(Assembly.GetExecutingAssembly());
             //Type[] typelist = GetTypesInNamespace(Assembly.GetExecutingAssembly(), "CockpitBuilder.Plugins.");
             //List<string> finallist = typelist.Select(x => x.ToString().Replace("CockpitBuilder.Plugins.", "").Replace("_ViewModel", "")).ToList();
@@ -243,6 +243,20 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
         //{
         //    e.Handled = true;
         //}
+
+
+        //private Point translation;
+
+        //public Point Translation
+        //{
+        //    get => translation;
+        //    set {
+        //        translation = value;
+        //        NotifyOfPropertyChange(() => Translation);
+        //    }
+        //}
+
+
 
         private DependencyObject GetAncestor(UIElement element, Type parentType)
         {

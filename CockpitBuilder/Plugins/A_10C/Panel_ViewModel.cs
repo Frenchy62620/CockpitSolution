@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using CockpitBuilder.Common.PropertyEditors;
 using CockpitBuilder.Core.Common.Events;
 using CockpitBuilder.Events;
 
@@ -27,7 +28,12 @@ namespace CockpitBuilder.Plugins.A_10C
 
             Frame = true;
         }
-
+        public override double Left { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public override double Top { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public override PropertyEditorModel[] GetProperties()
+        {
+            return new PropertyEditorModel[] { };
+        }
         #region Selection Image
         public string BackgroundImage { get; set; }
         public double[] ImageSize{ get; set; }

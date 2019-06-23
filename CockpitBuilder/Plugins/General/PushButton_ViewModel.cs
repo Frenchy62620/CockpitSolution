@@ -20,81 +20,47 @@ namespace CockpitBuilder.Plugins.General
         private readonly IEventAggregator eventAggregator;
         private readonly string tag;
         public PushButtonAppearanceEditorViewModel Appearance { get; }
+        //public PushButtonAppearanceEditorViewModel Appearance { get; private set; }
         public LayoutPropertyEditorViewModel Layout { get; }
-        public  PushButtonBehaviorEditorViewModel behavior;
-        public PushButtonAppearance pushButtonAppearance { get; private set; }
-        public PushButton_ViewModel(IEventAggregator eventAggregator, 
-                                    LayoutPropertyEditorViewModel layout, 
-                                    PushButtonAppearanceEditorViewModel appearance,
-                                    PushButtonBehaviorEditorViewModel behavior,
-                                    params object[] settings)
+        public PushButtonBehaviorEditorViewModel Behavior { get; }
+
+        public PushButton_ViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
-            //layout.DeviceModel = this;
-            //behavior.DeviceModel = this;
-            //TextFormat TextFormat = new TextFormat(fontFamily: "Franklin Gothic",
-            //                                       style: FontStyles.Normal,
-            //                                       weight: FontWeights.Normal,
-            //                                       size: 12d,
-            //                                       padding: new double[] { 0d, 0d, 0d, 0d },
-            //                                       horizontalAlignment: TextHorizontalAlignment.Center,
-            //                                       verticalAlignment: TextVerticalAlignment.Center);
+            Layout = new LayoutPropertyEditorViewModel(eventAggregator, settings);
+            Appearance = new PushButtonAppearanceEditorViewModel(eventAggregator, settings);
+            Behavior = new PushButtonBehaviorEditorViewModel(eventAggregator, settings);
 
             base.IsUCSelected = true;
-            //appearance.Layout = layout;
-            this.behavior = behavior;
+
             NameUC = (string)settings[0];
-            layout.NameUC = NameUC;
-            layout.UCLeft = (int)settings[1];
-            layout.UCTop = (int)settings[2];
-            layout.Width = (int)settings[6];
-            layout.Height = (int)settings[7];
-            layout.AngleRotation = (int)settings[3];
-
-            PluginWidth = (int)settings[6];
-            PluginHeight = (int)settings[7];
-
-            appearance.Image = (string)settings[4];
-            appearance.PushedImage = (string)settings[5];
-            appearance.SelectedPushButtonGlyph = (PushButtonGlyph)1;
-            appearance.GlyphScale = 0.8d;
-            appearance.Center = new Point(layout.Width / 2d, layout.Height / 2d);
-            appearance.RadiusX = Math.Min(layout.Width, layout.Height) / 2d * appearance.GlyphScale;
-
-            appearance.GlyphColor = Colors.White;
-            appearance.GlyphThickness = 2;
-            appearance.TextColor = Colors.White;
-            appearance.TextFormat.FontSize = 20;
-            appearance.TextPushOffset = "10,1";
-            behavior.PushButtonTypeIndex = (int)settings[8];
 
 
-
-
-            ScaleX = (double)settings[9];
-
-            //appearance.IndexImage = (int)settings[10];
-
-            pushButtonAppearance = new PushButtonAppearance(nameUC: (string)settings[0], 
-                                                            images: new string[] { (string)settings[4], (string)settings[5] }, 
-                                                            startimageposition: (int)settings[10], 
-                                                            textformat: new TextFormat(fontFamily: "Franklin Gothic",
-                                                                                       style: FontStyles.Normal,
-                                                                                       weight: FontWeights.Normal,
-                                                                                       size: 12d,
-                                                                                       padding: new double[] { 0d, 0d, 0d, 0d },
-                                                                                       horizontalAlignment: TextHorizontalAlignment.Center,
-                                                                                       verticalAlignment: TextVerticalAlignment.Center
-                                                                                      )
-                                                           );
-
-            eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)layout, appearance, behavior }));
+            //eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)Layout, Appearance, Behavior }));
 
             Frame = false;
 
-            Layout = layout;
-            Appearance = appearance;
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
+        }
+
+        public override double Left
+        {
+            get => Layout.UCLeft;
+            set => Layout.UCLeft = value;
+        }
+        public override double Top
+        {
+            get => Layout.UCTop;
+            set => Layout.UCTop = value;
+        }
+        //public override Point GetPosition()
+        //{
+        //    return new Point(Layout.UCLeft, Layout.UCTop);
+        //}
+
+        public override PropertyEditorModel[] GetProperties()
+        {
+            return new PropertyEditorModel[] { Layout, Appearance, Behavior };
         }
 
         ~PushButton_ViewModel()
@@ -139,7 +105,7 @@ namespace CockpitBuilder.Plugins.General
         {
             if (IsClickCommingFromMonitorViewModel && !IsUCSelected)
             {
-                eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)Layout, Appearance, behavior }));
+                eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)Layout, Appearance, Behavior }));
                 IsUCSelected = true;
                 if (e != null)
                     e.Handled = true;
@@ -148,16 +114,17 @@ namespace CockpitBuilder.Plugins.General
             Mouse.Capture((UIElement)elem);
             //((UIElement)elem).CaptureMouse();
             var r = elem as Rectangle;
-            pushButtonAppearance.IndexImage = 1;
+            Appearance.IndexImage = 1;
         }
         public void MouseLeftButtonUp()
         {
             Mouse.Capture(null);
-            pushButtonAppearance.IndexImage = 0;
+            Appearance.IndexImage = 0;
         }
         public void MouseEnter(MouseEventArgs e)
         {
-            ToolTip = $"({Layout.UCLeft}, {Appearance.Center})\n({ScaleX:0.##}, {(ScaleX * Appearance.GlyphThickness):0.##}, {(ScaleX * Layout.Height):0.##}), Tag = {tag}";
+            /*{Appearance.Center})\n({ScaleX:0.##}*/
+            //ToolTip = $"({Layout.UCLeft}, , {(ScaleX * Appearance.GlyphThickness):0.##}, {(ScaleX * Layout.Height):0.##}), Tag = {tag}";
         }
         #endregion
 
@@ -291,7 +258,7 @@ namespace CockpitBuilder.Plugins.General
 
         public void Handle(NewAppearanceEvent message)
         {
-            pushButtonAppearance = (PushButtonAppearance) message.Appearance;
+            //pushButtonAppearance = (PushButtonAppearance) message.Appearance;
 
         }
         #endregion

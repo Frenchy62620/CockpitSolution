@@ -4,9 +4,11 @@ namespace CockpitBuilder.Events
     public class NewAppearanceEvent
     {
         public object Appearance ;
-        public NewAppearanceEvent(object appearance)
+        string NameUC;
+        public NewAppearanceEvent(string nameuc, object appearance)
         {
             Appearance = appearance;
+            NameUC = nameuc;
         }
     }
 }

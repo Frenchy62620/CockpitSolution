@@ -3,12 +3,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:cal="http://www.caliburnproject.org"
              xmlns:converters="clr-namespace:CockpitBuilder.Common.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:CockpitBuilder.Plugins.General"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="450" d:DesignWidth="800" 
              >
-    <Grid>
+    
+    <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -17,31 +20,40 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Name="ZoomPanel" DockPanel.Dock="Left" Orientation="Vertical" Width="32" Visibility="Visible" Grid.RowSpan="2" Grid.Row="0" Grid.Column="0">
+        <StackPanel Name="ZoomPanel" DockPanel.Dock="Left" Orientation="Vertical" Width="32" 
+                    Visibility="{Binding ZoomPanelVisibility, UpdateSourceTrigger=PropertyChanged}" 
+                    Grid.RowSpan="2" Grid.Row="0" Grid.Column="0">
             <Label FontSize="8" FontWeight="Bold" Foreground="Black" Content="Zoom" />
-            <Slider Orientation="Vertical" Margin="2,0" MinHeight="100" Minimum="-10" Maximum="2" Value="{Binding ZoomLevel, Mode=TwoWay}" TickFrequency="1" TickPlacement="BottomRight" IsMoveToPointEnabled="False" IsSnapToTickEnabled="False" SmallChange="0.25" 
-                    cal:Message.Attach="[Event Valuechanged] = [Action OnValuechanged($eventArgs)]"/>
+            <Slider x:Name="slider" Orientation="Vertical" Margin="2,0" MinHeight="100" Minimum="-10" Maximum="2" 
+                    Value="{Binding ZoomLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                    TickFrequency="1" TickPlacement="BottomRight" 
+                    IsMoveToPointEnabled="False" IsSnapToTickEnabled="False" SmallChange="0.25" 
+                    cal:Message.Attach="[Event ValueChanged] = [Action OnValueChanged($eventArgs)]">
+            </Slider>
         </StackPanel>
-        <!--<Grid x:Name="ScrollGrid" Width="{Binding Width}" Height="{Binding Height}">-->
+
         <ScrollViewer Grid.Row="0" Grid.Column="1" x:Name="PreviewScroller" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                       cal:Message.Attach="[Event SizeChanged]=[Action ScrollViewerSizeChanged($eventArgs)]" 
                       >
             <Grid Width="{Binding PreviewWidth}" Height="{Binding PreviewHeight}">
                 <Rectangle x:Name="MainRectangle"  StrokeThickness="4" Stroke="Black"  >
 
-                <Rectangle.Fill>
-                    <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
-                        <DrawingBrush.Drawing>
-                            <DrawingGroup>
-                                <GeometryDrawing Geometry="M0,0 L10,0 10,10, 0,10Z" Brush="{Binding BackgroundColor1}" />
-                                <GeometryDrawing Geometry="M0,5 L10,5 10,10, 5,10 5,0 0,0Z" Brush="{Binding BackgroundColor2}"/>
-                            </DrawingGroup>
-                        </DrawingBrush.Drawing>
-                    </DrawingBrush>
+                    <Rectangle.Fill>
+                        <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
+                            <DrawingBrush.Drawing>
+                                <DrawingGroup>
+                                    <GeometryDrawing Geometry="M0,0 L10,0 10,10, 0,10Z" Brush="{Binding MonitorViewModel.LayoutMonitor.BackgroundColor1}" />
+                                    <GeometryDrawing Geometry="M0,5 L10,5 10,10, 5,10 5,0 0,0Z" Brush="{Binding MonitorViewModel.LayoutMonitor.BackgroundColor2}"/>
+                                </DrawingGroup>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
 
-                </Rectangle.Fill>
+                    </Rectangle.Fill>
 
-            </Rectangle>
+                </Rectangle>
+                
+                <Image x:Name="BackgroundImage"   Stretch="Fill"  HorizontalAlignment="Left" VerticalAlignment="Top" 
+                       Margin="0,0,0,0" Width="1920" Height="1080" Source="{Binding MonitorViewModel.LayoutMonitor.BackgroundImage}" />
 
                 <ItemsControl ItemsSource="{Binding MonitorViewModel.MyCockpitViewModels}" >
                     <ItemsControl.ItemTemplate>
@@ -86,12 +98,12 @@
 
             </Grid>
         </ScrollViewer>
-        <!--</Grid>-->
+        
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,6">
             <CheckBox x:Name="ShowPanels" Margin="2" VerticalAlignment="Center" />
             <TextBlock  Text="ShowPanels"/>
             <CheckBox x:Name="FullSize" Margin="12,2,2,2" VerticalAlignment="Center"  />
-            <TextBlock>Full Size</TextBlock>
+            <TextBlock Text="Full Size" />
         </StackPanel>
     </Grid>
 </UserControl>

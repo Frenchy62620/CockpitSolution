@@ -64,6 +64,12 @@ namespace CockpitBuilder.Plugins.General
             Frame = true;
         }
 
+        public override double Left { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public override double Top { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public override PropertyEditorModel[] GetProperties()
+        {
+            return new PropertyEditorModel[] { Layout, Appearance };
+        }
 
         ~Switch1_ViewModel()
         {

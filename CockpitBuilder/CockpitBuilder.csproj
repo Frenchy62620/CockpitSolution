@@ -95,6 +95,10 @@
     <Compile Include="Common\Converters\BindingProxy.cs" />
     <Compile Include="Common\Converters\EnumConverter.cs" />
     <Compile Include="Common\Converters\EnumDisplayEntry.cs" />
+    <Compile Include="Common\Input\KeySequence.cs" />
+    <Compile Include="Common\Input\KeyTrigger.cs" />
+    <Compile Include="Common\Input\MultiKeyGesture.cs" />
+    <Compile Include="Common\Input\MultiKeyGestureConverter.cs" />
     <Compile Include="Common\Converters\MyConverter.cs" />
     <Compile Include="Common\CustomControls\ColorPicker\ColorPicker.cs" />
     <Compile Include="Common\CustomControls\ColorPicker\ColorPickerDialogView.xaml.cs">
@@ -227,6 +231,8 @@
     </Compile>
     <Compile Include="Shells\MainShellViewModel.cs" />
     <Compile Include="Shells\ShellPresentationModel.cs" />
+    <Compile Include="Views\Main\DockPanel\Models\CalibrationPointCollectionDouble.cs" />
+    <Compile Include="Views\Main\DockPanel\Models\CalibrationPointDouble.cs" />
     <Compile Include="Views\Main\DockPanel\Models\DisplayManager.cs" />
     <Compile Include="Views\Main\DockPanel\Models\Monitor.cs" />
     <Compile Include="Views\Main\DockPanel\Models\MonitorCollection.cs" />
@@ -519,5 +525,6 @@
   <ItemGroup>
     <Resource Include="Resources\ToolBar\Unlocker.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

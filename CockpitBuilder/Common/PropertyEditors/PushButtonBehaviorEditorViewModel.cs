@@ -1,4 +1,5 @@
-﻿using CockpitBuilder.Plugins.General;
+﻿using CockpitBuilder.Core.Common.Events;
+using CockpitBuilder.Plugins.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace CockpitBuilder.Common.PropertyEditors
 {
     public class PushButtonBehaviorEditorViewModel:PropertyEditorModel
     {
-        public PushButtonBehaviorEditorViewModel()
+        private readonly IEventAggregator eventAggregator;
+        public PushButtonBehaviorEditorViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
             PushButtonTypes = Enum.GetValues(typeof(PushButtonType)).Cast<PushButtonType>().ToList();
             //SelectedPushButtonType = PushButtonType.Toggle;

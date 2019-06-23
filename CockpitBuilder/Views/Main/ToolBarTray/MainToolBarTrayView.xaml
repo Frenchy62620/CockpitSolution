@@ -3,12 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:common="clr-namespace:CockpitBuilder.Common.Caliburn"
+             xmlns:cal="http://www.caliburnproject.org"
              xmlns:local="clr-namespace:CockpitBuilder.Views.Main.ToolBarTray"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="800">
     <Grid>
-        <ToolBarTray  IsLocked="True" Background="Transparent">
-            <ToolBar Height="28" Background="Transparent">
+        <!--<ToolBarTray  x:Name="ToolBar" IsLocked="True" Background="Transparent" >-->
+            <ToolBar Height="28" Background="Transparent"  >
                 <Button x:Name="MoveForward" >
                     <Image Source="{StaticResource BringForwardIcon}" />
                     <Button.ToolTip>Bring control forward so it displays on top of other controls.</Button.ToolTip>
@@ -22,8 +24,9 @@
                     <Image Source="{StaticResource AlignTop}" />
                     <Button.ToolTip>Align selected controls to the top of the first selected control.</Button.ToolTip>
                 </Button>
-                <Button x:Name="AlignBottom">
-                    <Image Source="{StaticResource AlignBottom}" />
+                <Button  x:Name="AlignBottom"  >
+
+                    <Image Source="{StaticResource AlignBottom}"  />
                     <Button.ToolTip>Align selected controls to the bottom of the first selected control.</Button.ToolTip>
                 </Button>
                 <Button x:Name="AlignHorizontalCenter">
@@ -61,6 +64,7 @@
                     <Button.ToolTip>Space evenly selected controls verticaly.</Button.ToolTip>
                 </Button>
             </ToolBar>
-        </ToolBarTray>
+         
+        <!--</ToolBarTray>-->
     </Grid>
 </UserControl>

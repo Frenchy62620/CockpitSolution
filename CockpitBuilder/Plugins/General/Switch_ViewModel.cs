@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using CockpitBuilder.Common.PropertyEditors;
 using CockpitBuilder.Core.Common.Events;
 using CockpitBuilder.Events;
 
@@ -36,6 +37,14 @@ namespace CockpitBuilder.Plugins.General
 
             Frame = false;
         }
+
+        public override double Left { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public override double Top { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public override PropertyEditorModel[] GetProperties()
+        {
+            return new PropertyEditorModel[] {  };
+        }
+
         ~Switch_ViewModel()
         {
             System.Diagnostics.Debug.WriteLine("sortie switch");

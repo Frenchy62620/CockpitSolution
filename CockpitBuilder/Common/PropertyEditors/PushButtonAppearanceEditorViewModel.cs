@@ -9,32 +9,54 @@ using System.Windows.Input;
 using System.Windows.Media;
 using CockpitBuilder.Plugins.General;
 using CockpitBuilder.Common.CustomControls;
+using Caliburn.Micro;
 
 namespace CockpitBuilder.Common.PropertyEditors
 {
     public class PushButtonAppearanceEditorViewModel:PropertyEditorModel, Core.Common.Events.IHandle<PushButtonAppearanceEvent>,
                                                                           Core.Common.Events.IHandle<NewLayoutEvent>
+       
     {
         private readonly IEventAggregator eventAggregator;
-        public PushButtonAppearance Appearance { get; }
+
         public string NameUC;
         public PushButtonAppearanceEditorViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
-            VAlignTypes = Enum.GetValues(typeof(TextVerticalAlignment)).Cast<TextVerticalAlignment>().ToList();
-            HAlignTypes = Enum.GetValues(typeof(TextHorizontalAlignment)).Cast<TextHorizontalAlignment>().ToList();
-            SelectedVAlignType = CustomControls.TextVerticalAlignment.Center;
-            SelectedHAlignType = CustomControls.TextHorizontalAlignment.Center;
-            TextFormat = new TextFormat();
+            var view = ViewLocator.LocateForModel(this, null, null);
+            ViewModelBinder.Bind(this, view, null);
+
             Name = "Appearance";
 
-            //TextColor = Colors.White;
-            Appearance = new PushButtonAppearance(nameUC: (string)settings[0],
-                                                  images: new string[] { (string)settings[4], (string)settings[5] }, 
-                                                  startimageposition: (int)settings[10], 
-                                                  textformat: TextFormat);
+            VAlignTypes = Enum.GetValues(typeof(TextVerticalAlignment)).Cast<TextVerticalAlignment>().ToList();
+            HAlignTypes = Enum.GetValues(typeof(TextHorizontalAlignment)).Cast<TextHorizontalAlignment>().ToList();
+
+            Image = ((string[])settings[2])[0];
+            PushedImage = ((string[])settings[2])[1];
+            IndexImage = (int)settings[3];
+
+            GlyphThickness = (double)settings[4];
+            GlyphScale = (double)settings[5];
+            SelectedPushButtonGlyph = (PushButtonGlyph)(int)settings[6];
+            GlyphColor = (Color)settings[7];
+            GlyphText = "";
+            TextPushOffset = "1,1";
+            SelectedVAlignType = TextVerticalAlignment.Center;
+            SelectedHAlignType = TextHorizontalAlignment.Center;
+
+            TextFormat = new TextFormat(fontFamily: "Franklin Gothic",
+                                        style: FontStyles.Normal,
+                                        weight: FontWeights.Normal,
+                                        size: 12d,
+                                        padding: new double[] { 0d, 0d, 0d, 0d },
+                                        horizontalAlignment: TextHorizontalAlignment.Center,
+                                        verticalAlignment: TextVerticalAlignment.Center
+                                       );
+
+            TextColor = Colors.White;
+
             eventAggregator.Subscribe(this);
             this.eventAggregator = eventAggregator;
-            eventAggregator.Publish(new NewAppearanceEvent(new string[] { Image, PushedImage }));
+ //           eventAggregator.Publish(new NewAppearanceEvent(NameUC, Appearance));
         }
 
         //~PushButtonAppearanceEditorViewModel()
@@ -42,7 +64,6 @@ namespace CockpitBuilder.Common.PropertyEditors
         //    System.Diagnostics.Debug.WriteLine("sortie pushAppearance");
         //}
 
-        //public LayoutPropertyEditorViewModel Layout;
 
 
         public string Name { get; set; }
@@ -63,6 +84,7 @@ namespace CockpitBuilder.Common.PropertyEditors
                 NotifyOfPropertyChange(() => TextFormat);
             }
         }
+
         private string textPushOffset;
         public string TextPushOffset
         {
@@ -166,7 +188,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             {
                 selectedPushButtonGlyph = value;
                 GlyphSelected = (int)value;
-                DrawGlyph(GlyphSelected);
                 NotifyOfPropertyChange(() => SelectedPushButtonGlyph);
             }
         }
@@ -211,7 +232,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             {
                 glyphscale = value;
                 NotifyOfPropertyChange(() => GlyphScale);
-                DrawGlyph(GlyphSelected);
             }
         }
 
@@ -234,13 +254,7 @@ namespace CockpitBuilder.Common.PropertyEditors
             {
                 image = value;
                 NotifyOfPropertyChange(() => Image);
-                SendEvent();
             }
-        }
-
-        private void SendEvent()
-        {
-            eventAggregator.Publish(new NewAppearanceEvent(new string[] { Image, PushedImage }));
         }
 
         private string pushedimage;
@@ -251,7 +265,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             {
                 pushedimage = value;
                 NotifyOfPropertyChange(() => PushedImage);
-                SendEvent();
             }
         }
         private int indexImage;
@@ -262,58 +275,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             {
                 indexImage = value;
                 NotifyOfPropertyChange(() => IndexImage);
-            }
-        }
-
-        private Point startPoint;
-        public Point StartPoint
-        {
-            get => startPoint;
-            set
-            {
-                startPoint = value;
-                NotifyOfPropertyChange(() => StartPoint);
-            }
-        }
-
-        private Point middlePoint;
-        public Point MiddlePoint
-        {
-            get => middlePoint;
-            set
-            {
-                middlePoint = value;
-                NotifyOfPropertyChange(() => MiddlePoint);
-            }
-        }
-        private Point endPoint;
-        public Point EndPoint
-        {
-            get => endPoint;
-            set
-            {
-                endPoint = value;
-                NotifyOfPropertyChange(() => EndPoint);
-            }
-        }
-        private Point head1Point;
-        public Point Head1Point
-        {
-            get => head1Point;
-            set
-            {
-                head1Point = value;
-                NotifyOfPropertyChange(() => Head1Point);
-            }
-        }
-        private Point head2Point;
-        public Point Head2Point
-        {
-            get => head2Point;
-            set
-            {
-                head2Point = value;
-                NotifyOfPropertyChange(() => Head2Point);
             }
         }
 
@@ -328,27 +289,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             }
         }
 
-
-        private Point center;
-        public Point Center
-        {
-            get { return new Point(LayoutWidth / 2d, LayoutHeight / 2d);  }
-            set
-            {
-                center = value;
-                NotifyOfPropertyChange(() => Center);
-            }
-        }
-        private double radiusx;
-        public double RadiusX
-        {
-            get { return radiusx; }
-            set
-            {
-                radiusx = value;
-                NotifyOfPropertyChange(() => RadiusX);
-            }
-        }
 
         public void LeftPaddingChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -385,95 +325,26 @@ namespace CockpitBuilder.Common.PropertyEditors
                 TextFormat.PaddingTop = TextFormat.PaddingBottom;
             }
         }
-        private void DrawGlyph(int moduleToDraw)
-        {
-            switch(moduleToDraw)
-            {
-                case (int)PushButtonGlyph.None:
-                    return;
-                case (int)PushButtonGlyph.Circle:
-                    DrawCircle();
-                    return;
-                case (int)PushButtonGlyph.RightArrow:
-                    DrawArrow(true);
-                    return;
-                case (int)PushButtonGlyph.LeftArrow:
-                    DrawArrow(false);
-                    return;
-                case (int)PushButtonGlyph.UpCaret:
-                    DrawCaret(true);
-                    return;
-                case (int)PushButtonGlyph.DownCaret:
-                    DrawCaret(false);
-                    return;
-            }
-        }
 
-        private void DrawCircle()
-        {
-            Center = new Point(LayoutWidth / 2d, LayoutHeight / 2d);
-            RadiusX = Math.Min(LayoutWidth, LayoutHeight) / 2d * GlyphScale;
-        }
-        private void DrawCaret(bool up = true)
-        {
-            double offsetX = Center.X * GlyphScale;
-            double offsetY = offsetX / 2d;
-            if (up)
-            {
-                StartPoint = new Point(Center.X - offsetX, Center.Y + offsetY);
-                MiddlePoint = new Point(Center.X, Center.Y - offsetY);
-                EndPoint = new Point(Center.X + offsetX, Center.Y + offsetY);
-            }
-            else
-            {
-                StartPoint = new Point(Center.X - offsetX, Center.Y - offsetY);
-                MiddlePoint = new Point(Center.X, Center.Y + offsetY);
-                EndPoint = new Point(Center.X + offsetX, Center.Y - offsetY);
-            }
-        }
 
-        private void DrawArrow(bool Right)
-        {
-            double y = LayoutHeight / 2d;
-            double arrowLength = LayoutWidth * GlyphScale;
-            double padding = (LayoutWidth - arrowLength) / 2d;
-            double arrowLineLength = arrowLength * .6d;
-            double headHeightOffset = GlyphThickness * 2d;
-
-            //Point lineStart, lineEnd, head, head1, head2;
-
-            if (Right)
-            {
-                StartPoint = new Point(padding, y);
-                EndPoint = new Point(StartPoint.X + arrowLineLength, y);
-
-                MiddlePoint = new Point(LayoutWidth - padding, y);
-                Head1Point = new Point(EndPoint.X, y - headHeightOffset);
-                Head2Point = new Point(EndPoint.X, y + headHeightOffset);
-            }
-            else
-            {
-                StartPoint = new Point(LayoutWidth - padding, y);
-                EndPoint = new Point(StartPoint.X - arrowLineLength, y);
-
-                MiddlePoint = new Point(padding, y);
-                Head1Point = new Point(EndPoint.X, y + headHeightOffset);
-                Head2Point = new Point(EndPoint.X, y - headHeightOffset);
-            }
-
-        }
+ 
 
         public void Handle(PushButtonAppearanceEvent message)
         {
-            Image = message.Image[0];
-            PushedImage = message.Image[1];
+            //Image = message.Image[0];
+            //PushedImage = message.Image[1];
         }
 
         public void Handle(NewLayoutEvent message)
         {
             LayoutHeight = message.NewLayoutHeight;
             LayoutWidth = message.NewLayoutWidth;
-            DrawGlyph(GlyphSelected);
+            //DrawGlyph(GlyphSelected);
         }
+
+        //private void SendEvent()
+        //{
+        //    eventAggregator.Publish(new NewAppearanceEvent(NameUC, Appearance));
+        //}
     }
 }

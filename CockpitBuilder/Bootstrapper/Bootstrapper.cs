@@ -11,6 +11,7 @@ using CockpitBuilder.Views.Main.DockPanel.Panels;
 using CockpitBuilder.Views.Main;
 using CockpitBuilder.Common.AvalonDock;
 using System.Windows.Input;
+using CockpitBuilder.Common.Input;
 
 namespace CockpitBuilder.Bootstrapper
 {
@@ -109,7 +110,63 @@ namespace CockpitBuilder.Bootstrapper
 
                 return e.GetPosition(ctx.Source);
             });
+
+            MessageBinder.SpecialValues.Add("$pressedkey", (context) =>
+            {
+                // NOTE: IMPORTANT - you MUST add the dictionary key as lowercase as CM
+                // does a ToLower on the param string you add in the action message, in fact ideally
+                // all your param messages should be lowercase just in case. I don't really like this
+                // behaviour but that's how it is!
+                var keyArgs = context.EventArgs as KeyEventArgs;
+
+                if (keyArgs != null)
+                    return keyArgs.Key;
+                return null;
+            });
+
+            MessageBinder.SpecialValues.Add("$pressedmodifierkey", (context) =>
+            {
+                var keyArgs = context.EventArgs as KeyEventArgs;
+
+                if (keyArgs != null)
+                    return keyArgs.KeyboardDevice.Modifiers;
+                return null;
+            });
+
         }
+        //see https://github.com/Caliburn-Micro/Caliburn.Micro/tree/master/samples/scenarios/Scenario.KeyBinding
+        private void SetupCustomTriggerBindings()
+        {
+            var defaultCreateTrigger = Parser.CreateTrigger;
+
+            Parser.CreateTrigger = (target, triggerText) =>
+            {
+                if (triggerText == null)
+                {
+                    return defaultCreateTrigger(target, null);
+                }
+
+                var triggerDetail = triggerText
+                    .Replace("[", string.Empty)
+                    .Replace("]", string.Empty);
+
+                var splits = triggerDetail.Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+
+                switch (splits[0])
+                {
+                    case "Key":
+                        var key = (Key)Enum.Parse(typeof(Key), splits[1], true);
+                        return new KeyTrigger { Key = key };
+
+                    case "Gesture":
+                        var mkg = (MultiKeyGesture)(new MultiKeyGestureConverter()).ConvertFrom(splits[1]);
+                        return new KeyTrigger { Modifiers = mkg.KeySequences[0].Modifiers, Key = mkg.KeySequences[0].Keys[0] };
+                }
+
+                return defaultCreateTrigger(target, triggerText);
+            };
+        }
+
     }
 }
 

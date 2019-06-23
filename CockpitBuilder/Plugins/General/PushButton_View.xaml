@@ -12,21 +12,21 @@
     VerticalAlignment = "Top" HorizontalAlignment = "Left" ClipToBounds="True"
     cal:Message.Attach="[Event MouseEnter] = [Action MouseEnter($eventArgs)]">
     <!--RenderTransformOrigin="0.5,0.5"    ;[Event MouseLeftButtonDown] = [Action MouseLeftButtonDown($source, $mousepoint, 'false')]" -->
-    <UserControl.RenderTransform>
+    <!--<UserControl.RenderTransform>
         <TransformGroup>
             <RotateTransform x:Name="rotation" Angle="{Binding Layout.AngleRotation}" />
             <ScaleTransform x:Name="scale" ScaleX="{Binding ScaleX}" ScaleY="{Binding ScaleX}"/>
         </TransformGroup>
-    </UserControl.RenderTransform>
+    </UserControl.RenderTransform>-->
 
-    <Grid x:Name="Switch"  Width="{Binding Path=PluginWidth}" Height="{Binding Path=PluginHeight}" >
-        <Image x:Name="Pushed" Source="{Binding pushButtonAppearance.PushedImage}"
+    <Grid x:Name="Switch"  Width="{Binding Path=Layout.Width}" Height="{Binding Path=Layout.Height}" >
+        <Image x:Name="Pushed" Source="{Binding Appearance.PushedImage, Mode=TwoWay}"
                HorizontalAlignment="Center" VerticalAlignment="Center" >
             <Image.Style>
                 <Style TargetType="{x:Type Image}">
                     <Setter Property="Visibility" Value="Hidden" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding pushButtonAppearance.IndexImage}" Value="1">
+                        <DataTrigger Binding="{Binding Appearance.IndexImage, Mode=TwoWay}" Value="1">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -34,24 +34,25 @@
             </Image.Style>
         </Image>
 
-        <Image x:Name="Normal" Source="{Binding pushButtonAppearance.Image}"
+        <Image x:Name="Normal" Source="{Binding Appearance.Image}"
                HorizontalAlignment="Center" VerticalAlignment="Center" >
             <Image.Style>
                 <Style TargetType="{x:Type Image}">
                     <Setter Property="Visibility" Value="Hidden" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding pushButtonAppearance.IndexImage}" Value="0">
+                        <DataTrigger Binding="{Binding Appearance.IndexImage}" Value="0">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Image.Style>
         </Image>
-
         <TextBlock Text="{Binding Appearance.GlyphText}" Foreground="{Binding Appearance.TextColor, Converter={StaticResource MyconverterColorToSolidColorBrush}}"
                    HorizontalAlignment="{Binding Appearance.HAlign}" VerticalAlignment="{Binding Appearance.VAlign}" 
-                   FontFamily="{Binding Appearance.TextFormat.FontFamily}" FontSize="{Binding Appearance.TextFormat.FontSize}" FontStyle="{Binding Appearance.TextFormat.FontStyle}"
-                   FontWeight="{Binding Appearance.TextFormat.FontWeight}" TextDecorations="{Binding Appearance.TextFormat.TextDecorations}">
+                   FontFamily="{Binding Appearance.TextFormat.FontFamily}" FontSize="{Binding Appearance.TextFormat.FontSize}" 
+                   FontStyle="{Binding Appearance.TextFormat.FontStyle}"
+                   FontWeight="{Binding Appearance.TextFormat.FontWeight}" TextDecorations="{Binding Appearance.TextFormat.TextDecorations}"
+                   >
             <TextBlock.Margin>
                 <MultiBinding Converter="{StaticResource MyMultiConverterMargin }">
                     <Binding Path="Appearance.TextFormat.PaddingLeft" />
@@ -63,14 +64,20 @@
                 </MultiBinding>
             </TextBlock.Margin>
             <TextBlock.Style>
-                <Style TargetType="TextBlock" >
+                <Style TargetType="TextBlock">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding pushButtonAppearance.IndexImage}" Value="1">
+                        <DataTrigger Binding="{Binding Appearance.IndexImage}" Value="1">
                             <Setter Property="RenderTransform" >
                                 <Setter.Value>
-                                    <TransformGroup >
-                                        <TranslateTransform X="{Binding Appearance.Offset.X}" Y="{Binding Appearance.Offset.Y}"  />
-                                    </TransformGroup>
+                                    <TranslateTransform X="{Binding Appearance.Offset.X}" Y="{Binding Appearance.Offset.Y}"  />
+                                    <!--<TranslateTransform>
+                                        <TranslateTransform.X>
+                                            <Binding Path="pushButtonAppearance.Offset.X"/>
+                                        </TranslateTransform.X>
+                                        <TranslateTransform.Y>
+                                            <Binding Path="pushButtonAppearance.Offset.Y"/>
+                                        </TranslateTransform.Y>
+                                    </TranslateTransform>-->
                                 </Setter.Value>
                             </Setter>
                         </DataTrigger>
@@ -78,117 +85,32 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
+        
         <Rectangle x:Name="DesignFrame"
                    Width="{Binding ElementName=Switch, Path=Width, UpdateSourceTrigger=PropertyChanged}"
                    Height="{Binding ElementName=Switch, Path=Height, UpdateSourceTrigger=PropertyChanged}"
                    Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource IsModeSelected}"
-                   cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDown($source, $mousepoint, $eventArgs, $executionContext, $datacontext)];[Event MouseLeftButtonUp] = [Action MouseLeftButtonUp]" >
+                   cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDown($source, $mousepoint, $eventArgs, $executionContext, $datacontext)];
+                                       [Event MouseLeftButtonUp] = [Action MouseLeftButtonUp]" >
         </Rectangle>
 
-        <Path x:Name="Circle" StrokeThickness="{Binding Appearance.GlyphThickness}" Stroke="{Binding Appearance.GlyphColor, Converter={StaticResource MyconverterColorToSolidColorBrush}}" >
-            <Path.Style>
-                <Style TargetType="Path">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Appearance.GlyphSelected}" Value="1">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Path.Style>
-            <Path.Data>
-                <EllipseGeometry x:Name="Ellipse">
-                    <EllipseGeometry.Center>
-                        <MultiBinding Converter="{StaticResource CircleRadiusOrCenterCalculus}">
-                            <Binding ElementName="Switch" Path="Width"/>
-                            <Binding ElementName="Switch" Path="Height"/>
-                        </MultiBinding>
-                    </EllipseGeometry.Center>
-                    <EllipseGeometry.RadiusX>
-                        <MultiBinding Converter="{StaticResource CircleRadiusOrCenterCalculus}">
-                            <Binding ElementName="Switch" Path="Width"/>
-                            <Binding ElementName="Switch" Path="Height"/>
-                            <Binding Path="pushButtonAppearance.GlyphScale"/>
-                        </MultiBinding>
-                    </EllipseGeometry.RadiusX>
-                    <EllipseGeometry.RadiusY>
-                        <Binding ElementName="Ellipse" Path="RadiusX"/>
-                    </EllipseGeometry.RadiusY>
-                </EllipseGeometry>
-            </Path.Data>
-
-            <!--<Path.Data>
-                <EllipseGeometry Center="{Binding Appearance.Center, Mode=TwoWay}" RadiusX="{Binding Appearance.RadiusX, Mode=TwoWay}" RadiusY="{Binding Appearance.RadiusX, Mode=TwoWay}" />
-            </Path.Data>-->
-
-        </Path>
-        <Path  x:Name="Arrows" StrokeThickness="{Binding Appearance.GlyphThickness}" Fill="{Binding RelativeSource={RelativeSource Self}, Path=Stroke}"
-                               Stroke="{Binding ElementName=Circle, Path=Stroke}" >
-            <Path.Style>
-                <Style TargetType="Path">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Appearance.GlyphSelected}" Value="2">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Appearance.GlyphSelected}" Value="3">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Path.Style>
-            <Path.Data>
-                <PathGeometry>
-                    <PathGeometry.Figures>
-                        <PathFigureCollection>
-                            <PathFigure IsClosed="True" StartPoint="{Binding Appearance.StartPoint}">
-                                <PathFigure.Segments>
-                                    <PathSegmentCollection>
-                                        <LineSegment Point="{Binding Appearance.EndPoint}" IsStroked="True" />
-                                        <LineSegment Point="{Binding Appearance.Head1Point}" />
-                                        <LineSegment Point="{Binding Appearance.MiddlePoint}" />
-                                        <LineSegment Point="{Binding Appearance.Head2Point}" />
-                                        <LineSegment Point="{Binding Appearance.EndPoint}" />
-                                    </PathSegmentCollection>
-                                </PathFigure.Segments>
-                            </PathFigure>
-                        </PathFigureCollection>
-                    </PathGeometry.Figures>
-                </PathGeometry>
-            </Path.Data>
-        </Path>
-        <Path x:Name="UpCaret" StrokeThickness="{Binding Appearance.GlyphThickness}" Stroke="{Binding ElementName=Circle, Path=Stroke}" >
-            <Path.Style>
-                <Style TargetType="Path">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Appearance.GlyphSelected}" Value="4">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Appearance.GlyphSelected}" Value="5">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Path.Style>
+        <Path StrokeThickness="{Binding Appearance.GlyphThickness}" Stroke="{Binding Appearance.GlyphColor, Converter={StaticResource MyconverterColorToSolidColorBrush}}" >
+            <Path.Fill>
+                <MultiBinding Converter="{StaticResource DrawGlyphes}">
+                    <Binding Path="Appearance.GlyphSelected"/>
+                    <Binding Path="Appearance.GlyphColor"/>
+                </MultiBinding>
+            </Path.Fill>
 
             <Path.Data>
-                <PathGeometry>
-                    <PathGeometry.Figures>
-                        <PathFigureCollection>
-                            <PathFigure IsClosed="False" StartPoint="{Binding Appearance.StartPoint}">
-                                <PathFigure.Segments>
-                                    <PathSegmentCollection>
-                                        <LineSegment Point="{Binding Appearance.MiddlePoint}" IsStroked="True"/>
-                                        <LineSegment Point="{Binding Appearance.EndPoint}" IsStroked="True" />
-                                    </PathSegmentCollection>
-                                </PathFigure.Segments>
-                            </PathFigure>
-                        </PathFigureCollection>
-                    </PathGeometry.Figures>
-                </PathGeometry>
+                <MultiBinding Converter="{StaticResource DrawGlyphes}">
+                    <Binding Path="Appearance.GlyphSelected"/>
+                    <Binding Path="Appearance.GlyphScale"/>
+                    <Binding ElementName="Switch" Path="Width"/>
+                    <Binding ElementName="Switch" Path="Height"/>
+                    <Binding Path="Appearance.GlyphThickness"/>
+                </MultiBinding>
             </Path.Data>
         </Path>
-
     </Grid>
 </UserControl>

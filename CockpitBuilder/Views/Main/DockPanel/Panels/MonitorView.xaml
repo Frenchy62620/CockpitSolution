@@ -9,59 +9,50 @@
              xmlns:local ="clr-namespace:CockpitBuilder.Views.Main.DockPanel.Models"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              mc:Ignorable="d"  d:DesignHeight="450" d:DesignWidth="800" 
-               Background="Transparent" cal:Message.Attach="[Event MouseEnter] = [Action MouseEnter];[Event MouseLeave] = [Action MouseLeave]">
+               Background="Transparent" cal:Message.Attach="[Event MouseLeave] = [Action MouseLeave];
+                                                            [Event MouseOver] = [Action MouseOver($source , $eventArgs)];
+                                                            [Event MouseMove] = [Action PreviewMouseMoveOnMonitorView($source, $mousepoint, $eventArgs)];
+                                                            [Event PreviewKeyDown] = [Action KeyTest($pressedKey, $eventargs)]; 
+                                                            [Gesture Ctrl+E,A] = [Action KeyTest($source ,$pressedKey)]">
 
     <UserControl.Resources>
         <DataTemplate x:Key="PupilDragAdorner">
-            <Grid>
-                <Rectangle Width="{Binding SelectedToolBoxItem.ImageWidth}" Height="{Binding SelectedToolBoxItem.ImageHeight}" StrokeThickness="4" Stroke="Green"/>
+            <Grid x:Name="Over">
+
+                <Rectangle Width="{Binding SelectedToolBoxItem.ImageWidth}" 
+                       Height="{Binding SelectedToolBoxItem.ImageHeight}" 
+                       StrokeThickness="4" Stroke="Green" />
                 <Image  Source="{Binding SelectedToolBoxItem.FullImageName}" 
-                        Width="{Binding SelectedToolBoxItem.ImageWidth}" Height="{Binding SelectedToolBoxItem.ImageHeight}" HorizontalAlignment="Center"/>
+                            Width="{Binding SelectedToolBoxItem.ImageWidth}" 
+                            Height="{Binding SelectedToolBoxItem.ImageHeight}" HorizontalAlignment="Center"
+                            />
                 <!--, diag:PresentationTraceSources.TraceLevel=High-->
                 <!--<TextBlock Text="{Binding FullName}" HorizontalAlignment="Center"/>-->
+
             </Grid>
         </DataTemplate>
-        <!--<DataTemplate x:Key="ItemDataTemplate"
-                      DataType="{x:Type local:ToolBoxItem}">
-            <Image Source="{Binding FullImageName}" Width="{Binding ImageWidth}" Height="{Binding ImageHeight}" />
-        </DataTemplate>-->
-
     </UserControl.Resources>
 
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="6">
-            <Grid x:Name="MainGrid">
+            <Grid x:Name="MainGrid" cal:Message.Attach="">
  
-                <Rectangle x:Name="MainRectangle" Width="1920" Height="1080" StrokeThickness="4" Stroke="Black" 
-                           gg:DragDrop.DropHandler="{Binding}" 
-                           gg:DragDrop.IsDropTarget="True" 
-                           gg:DragDrop.DragMouseAnchorPoint="0.5,0.5"
+                <Rectangle x:Name="MainRectangle" Width="{Binding Monitor.Width}" Height="{Binding Monitor.Height}" StrokeThickness="4" Stroke="Black" 
+                           gg:DragDrop.DropHandler="{Binding}"
+                           gg:DragDrop.IsDropTarget="True"
                            gg:DragDrop.DropAdornerTemplate="{StaticResource PupilDragAdorner}"
-                           cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnMonitorView($source, $mousepoint, $eventArgs)]">
-                    <!--cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDown($source, $mousepoint, $eventArgs)]"-->
+                           gg:DragDrop.DragAdornerTemplate="{StaticResource PupilDragAdorner}"
+                           cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnMonitorView($source, $mousepoint, $eventArgs)];
+                                               [Event MouseEnter] = [Action MouseEnter($source, $mousepoint, $eventArgs)];
+                                               [Event PreviewKeyDown] = [Action KeyTest($source, $pressedKey)]; 
+                                               [Gesture Ctrl+E,A] = [Action KeyTest($source ,$pressedKey)]"
+                            >
                     <Rectangle.Fill>
                         <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
-                            <!--<DrawingBrush.Drawing>
-                            <DrawingGroup>
-                                <GeometryDrawing Brush="White">
-                                    <GeometryDrawing.Geometry>
-                                        <RectangleGeometry Rect="0,0 100,100" />
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                                <GeometryDrawing Brush="LightGray">
-                                    <GeometryDrawing.Geometry>
-                                        <GeometryGroup>
-                                            <RectangleGeometry Rect="0,0 50,50" />
-                                            <RectangleGeometry Rect="50,50 50,50" />
-                                        </GeometryGroup>
-                                    </GeometryDrawing.Geometry>
-                                </GeometryDrawing>
-                            </DrawingGroup>
-                        </DrawingBrush.Drawing>-->
                             <DrawingBrush.Drawing>
                                 <DrawingGroup>
-                                    <GeometryDrawing Geometry="M0,0 L10,0 10,10, 0,10Z" Brush="{Binding BackgroundColor1}" />
-                                    <GeometryDrawing Geometry="M0,5 L10,5 10,10, 5,10 5,0 0,0Z" Brush="{Binding BackgroundColor2}"/>
+                                    <GeometryDrawing Geometry="M0,0 L10,0 10,10, 0,10Z" Brush="{Binding LayoutMonitor.BackgroundColor1}" />
+                                    <GeometryDrawing Geometry="M0,5 L10,5 10,10, 5,10 5,0 0,0Z" Brush="{Binding LayoutMonitor.BackgroundColor2}"/>
                                 </DrawingGroup>
                             </DrawingBrush.Drawing>
                         </DrawingBrush>
@@ -70,7 +61,14 @@
 
                 </Rectangle>
                 <Image x:Name="BackgroundImage"   Stretch="Fill"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" Width="1920" Height="1080" 
-                       gg:DragDrop.DropHandler="{Binding}" gg:DragDrop.IsDropTarget="True" gg:DragDrop.DropAdornerTemplate="{StaticResource PupilDragAdorner}"/>
+                       gg:DragDrop.DropHandler="{Binding}" Source="{Binding LayoutMonitor.BackgroundImage}"
+                       gg:DragDrop.IsDropTarget="True" 
+                       gg:DragDrop.DropAdornerTemplate="{StaticResource PupilDragAdorner}"
+                       gg:DragDrop.DragMouseAnchorPoint="0.0,0.0"
+                       cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnMonitorView($source, $mousepoint, $eventArgs)];
+                                           [Event KeyDown] = [Action KeyTest($pressedKey)]; 
+                                           [Gesture Ctrl+E,A] = [Action KeyTest($source ,$pressedKey)]"
+                       /> <!--IsHitTestVisible="False"-->
 
                 <ItemsControl ItemsSource="{Binding MyCockpitViewModels}" >
                     <ItemsControl.ItemTemplate>
@@ -78,7 +76,8 @@
                             <!--<Border BorderThickness="{Binding IsUCSelected, Converter={StaticResource MyConverterMargin}}" BorderBrush="Red" >-->
                             <AdornerDecorator >
                                 <ContentControl cal:View.Model="{Binding .}" 
-                                            cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnContentControl($source)];[Event Loaded] = [Action ContentControlLoaded($source)]">
+                                                cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnContentControl($source)];
+                                                                    [Event Loaded] = [Action ContentControlLoaded($source)]">
                                 </ContentControl>
                             </AdornerDecorator>
                             <!--</Border>-->

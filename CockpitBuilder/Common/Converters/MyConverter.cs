@@ -13,22 +13,30 @@ namespace CockpitBuilder.Common.Converters
         // parameter = "coefdiviseur sizetoretract"  "2 10"
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            Point p = new Point();
+            p.X = (double)((Point)value).X;
+            p.Y = (double)((Point)value).Y;
 
-            if (targetType == typeof(double))
-            {
-                double dvalue = 0;
-                if (!double.TryParse(value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out dvalue))
-                    return 0d;
+            return  p;
 
-                double[] param = parameter.ToString().Split(' ').Select(x => System.Convert.ToDouble(x, CultureInfo.InvariantCulture)).ToArray();
 
-                return dvalue / param[0] - param[1];
-            }
 
-            if (targetType == typeof(bool))
-                return !(bool)value;
 
-            return value;
+            //if (targetType == typeof(double))
+            //{
+            //    double dvalue = 0;
+            //    if (!double.TryParse(value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out dvalue))
+            //        return 0d;
+
+            //    double[] param = parameter.ToString().Split(' ').Select(x => System.Convert.ToDouble(x, CultureInfo.InvariantCulture)).ToArray();
+
+            //    return dvalue / param[0] - param[1];
+            //}
+
+            //if (targetType == typeof(bool))
+            //    return !(bool)value;
+
+            //return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -43,6 +51,9 @@ namespace CockpitBuilder.Common.Converters
         // parameter = "coefdiviseur sizetoretract"  "2 10"
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            //if (parameter != null && parameter.ToString().Equals("transform"))
+            //    return (double)value;
+
 
             if (targetType == typeof(double))
             {

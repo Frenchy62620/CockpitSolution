@@ -18,11 +18,11 @@ namespace CockpitBuilder.Views.Main.DockPanel.Models
         //private DisplayOrientation _orientation;
         //private bool _alwaysOnTop = true;
 
-        private readonly double Left;
-        private readonly double Top;
-        private readonly double Width;
-        private readonly double Height;
-        private readonly DisplayOrientation Orientation;
+        public readonly double Left;
+        public readonly double Top;
+        public readonly double Width;
+        public readonly double Height;
+        public readonly DisplayOrientation Orientation;
         public Monitor()
             : this(0, 0, 1024, 768, DisplayOrientation.DMDO_DEFAULT)
         {
