@@ -1,4 +1,5 @@
-﻿using CockpitBuilder.Events;
+﻿using Caliburn.Micro;
+using CockpitBuilder.Events;
 using CockpitBuilder.Plugins.General;
 using IEventAggregator = CockpitBuilder.Core.Common.Events.IEventAggregator;
 
@@ -11,16 +12,36 @@ namespace CockpitBuilder.Common.PropertyEditors
     public class ThreeWayToggleSwitchAppearanceEditorViewModel : PropertyEditorModel
     {
         private readonly IEventAggregator eventAggregator;
-
-        public ThreeWayToggleSwitchAppearanceEditorViewModel(IEventAggregator eventAggregator/*, int tag*/)
+        public ThreeWayToggleSwitchBehaviorEditorViewModel Behavior { get; set; }
+        public string NameUC { get; set; }
+        public ThreeWayToggleSwitchAppearanceEditorViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
+            bool IsModeEditor = (bool)settings[0];
+            if (IsModeEditor)
+            {
+                var view = ViewLocator.LocateForModel(this, null, null);
+                ViewModelBinder.Bind(this, view, null);
+            }
+            NameUC = (string)settings[1];
+
+            var index = 3;
+            PositionImage0 = ((string[])settings[index])[0];
+            PositionImage1 = ((string[])settings[index])[1];
+            PositionImage2 = ((string[])settings[index])[2];
+
+            PositionIndicatorImage0 = ((string[])settings[index])[3];
+            PositionIndicatorImage1 = ((string[])settings[index])[4];
+            PositionIndicatorImage2 = ((string[])settings[index++])[5];
+            IndexImage = (int)settings[index++];
+
+            Has3Images = !string.IsNullOrEmpty(PositionImage2);
+            hasIndicator = !string.IsNullOrEmpty(PositionIndicatorImage0);
+
+            Has3Images = true;
+            HasIndicator = false;
             this.eventAggregator = eventAggregator;
             eventAggregator.Subscribe(this);
 
-            PositionIndicatorImage0 = "";
-            PositionIndicatorImage1 = "";
-            PositionIndicatorImage2 = "";
-            Has3Images = false;
             Name = "Appareance";
         }
 
@@ -28,6 +49,7 @@ namespace CockpitBuilder.Common.PropertyEditors
 
         public string Name { get; set; }
 
+        #region Selection Images
         private string positionImage0;
         public string PositionImage0
         {
@@ -35,7 +57,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             set
             {
                 positionImage0 = value;
-                DeviceModel.Image0 = value;
                 NotifyOfPropertyChange(() => PositionImage0);
             }
         }
@@ -47,7 +68,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             set
             {
                 positionImage1 = value;
-                DeviceModel.Image1 = value;
                 NotifyOfPropertyChange(() => PositionImage1);
             }
         }
@@ -59,7 +79,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             set
             {
                 positionImage2 = value;
-                DeviceModel.Image2 = value;
                 NotifyOfPropertyChange(() => PositionImage2);
             }
         }
@@ -97,6 +116,17 @@ namespace CockpitBuilder.Common.PropertyEditors
             }
         }
 
+        private int indexImage;
+        public int IndexImage
+        {
+            get { return indexImage; }
+            set
+            {
+                indexImage = value;
+                NotifyOfPropertyChange(() => IndexImage);
+            }
+        }
+
         private bool hasIndicator;
         public bool HasIndicator
         {
@@ -117,27 +147,9 @@ namespace CockpitBuilder.Common.PropertyEditors
                 NotifyOfPropertyChange(() => Has3Images);
             }
         }
-        //public void Handle(PropertyHasIndicatorEvent message)
-        //{
-        //    HasIndicator = message.HasIndicator;
-        //}
+        #endregion
 
-        //public void Handle(PropertyHas3ImagesEvent message)
-        //{
-        //    Has3Images = message.Has3Images;
-        //}
 
-        //public void Handle(ThreeWayToggleSwitchAppearanceEvent message)
-        //{
-        //    HasIndicator = message.IndicatorLight;
-        //    Has3Images = message.Has3Images;
-        //    PositionImage0 = message.PositionOnImage[0];
-        //    PositionImage1 = message.PositionOnImage[1];
-        //    PositionImage2 = message.PositionOnImage[2];
-        //    PositionIndicatorImage0 = message.PositionIndicatorOnImage[0];
-        //    PositionIndicatorImage1 = message.PositionIndicatorOnImage[1];
-        //    PositionIndicatorImage2 = message.PositionIndicatorOnImage[2];
-        //}
     }
 
 }

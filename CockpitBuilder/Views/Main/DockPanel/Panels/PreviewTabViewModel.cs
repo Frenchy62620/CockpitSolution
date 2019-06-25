@@ -5,13 +5,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using CockpitBuilder.Core.Common.Events;
 using CockpitBuilder.Events;
 using CockpitBuilder.Views.Main.DockPanel.Models;
+using IEventAggregator = CockpitBuilder.Core.Common.Events.IEventAggregator;
 
 namespace CockpitBuilder.Views.Main.DockPanel.Panels
 {
-    public class PreviewTabViewModel : PanelViewModel, IHandle<DragSelectedItemEvent>, Core.Common.Events.IHandle<MonitorViewStartedEvent>
+    public class PreviewTabViewModel : PanelViewModel, Core.Common.Events.IHandle<DragSelectedItemEvent>, Core.Common.Events.IHandle<MonitorViewStartedEvent>
     {
         private readonly IEventAggregator eventAggregator;
 

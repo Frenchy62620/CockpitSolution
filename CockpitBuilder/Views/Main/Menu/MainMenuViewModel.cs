@@ -49,6 +49,7 @@ namespace CockpitBuilder.Views.Main.Menu
             }
         }
 
+
         public void NewProfile()
         {
             CreateProfileViewModel(null);

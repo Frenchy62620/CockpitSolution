@@ -32,7 +32,7 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
     {
         
         public double ZoomFactor;
-        private Dictionary<ContentControl, bool > DictContentcontrol = new Dictionary<ContentControl, bool>();
+        public Dictionary<ContentControl, bool > DictContentcontrol = new Dictionary<ContentControl, bool>();
 
         private readonly IEventAggregator eventAggregator;
         private readonly IResolutionRoot resolutionRoot;
@@ -43,7 +43,7 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
         private MonitorView monitorview;
 
         public MonitorPropertyEditorViewModel LayoutMonitor { get; }
-
+        public ContentControl FirstSelected { get; set; } = null;
         public int Tag = -1;
         private ToolBoxItem tbi;
         public MonitorViewModel(IEventAggregator eventAggregator, IResolutionRoot resolutionRoot, FileSystem fileSystem, DisplayManager displayManager)
@@ -63,6 +63,8 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { LayoutMonitor }));
             this.eventAggregator.Subscribe(this);
             MyCockpitViewModels = new ObservableCollection<PluginModel>();
+
+            NbrSelected = 0;
         }
         private static int indice = 0;
         private static int untitledIndex;
@@ -136,19 +138,17 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
         {
             this.tbi = message;
         }
-        public void MouseLeftButtonDownOnMonitorView(IInputElement elem, Point pos, MouseEventArgs e)
-        {
-            RemoveAdorners();
-            eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { LayoutMonitor }));
-        }
+
 
         public void ContentControlLoaded(object sender)
         {
             var s = sender as ContentControl;
             s.Focus();
             RemoveAdorners();
-            AddNewAdorner(s);
-        
+            AddNewAdorner(s, true);
+            FirstSelected = s;
+            NbrSelected = 1;
+
             eventAggregator.Publish(new DisplayPropertiesView1Event((s.DataContext as PluginModel).GetProperties()));
         }
 
@@ -166,11 +166,11 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             DictContentcontrol[s] = false;
         }
 
-        private void RemoveAdorners()
+        private void RemoveAdorners(ContentControl s = null)
         {
             foreach (var item in DictContentcontrol.Keys.ToList())
             {
-                if (!DictContentcontrol[item]) continue;
+                if (!(DictContentcontrol[item]) || (s != null && s == item)) continue;
 
                 DictContentcontrol[item] = false;
                 var adornerLayer = AdornerLayer.GetAdornerLayer(item);
@@ -185,47 +185,95 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             }
         }
 
-        public void AddNewAdorner(ContentControl s)
+        public void AddNewAdorner(ContentControl s, bool first = false)
         {
             var adornerLayer = AdornerLayer.GetAdornerLayer(s);
             if (adornerLayer != null)
             {
-                MyAdorner myAdorner = new MyAdorner(s);
+                MyAdorner myAdorner = new MyAdorner(s, first);
                 adornerLayer.Add(myAdorner);
                 DictContentcontrol[s] = true;
             }
         }
+
+        private int nbrSelected;
+        public int NbrSelected
+        {
+            get => nbrSelected;
+            set
+            {
+                if (NbrSelected != value)
+                {
+                    nbrSelected = value;
+                    EnableIcons = value > 1;
+                }
+            }
+        }
+
+        private bool nbrSelectedsupa2;
+        public bool EnableIcons
+        {
+            get => nbrSelectedsupa2;
+            set
+            {
+                if (nbrSelectedsupa2 == value) return;
+                nbrSelectedsupa2 = value;
+                NotifyOfPropertyChange(() => EnableIcons);
+            }
+        }
+
+        public void MouseLeftButtonDownOnMonitorView(IInputElement elem, Point pos, MouseEventArgs e)
+        {
+            RemoveAdorners();
+            eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { LayoutMonitor }));
+        }
         public void MouseLeftButtonDownOnContentControl(object sender)
         {
-            var nbr = DictContentcontrol.Where(item => item.Value).Count();
             var s = sender as ContentControl;
             var CtrlDown = (Keyboard.Modifiers & ModifierKeys.Control) != 0;
 
-            if (!CtrlDown)
+            if (CtrlDown)
             {
-                RemoveAdorners();
-                AddNewAdorner(s);
-                eventAggregator.Publish(new DisplayPropertiesView1Event((s.DataContext as PluginModel).GetProperties()));
-                return;
-            }
-            if (nbr > 1 && CtrlDown && DictContentcontrol[s])
-            {
-                RemoveAdorner(s);
-                if (nbr == 2)
+                if (DictContentcontrol[s])
                 {
-                    var t = DictContentcontrol.Where(item => item.Value).Select(item => item.Key.DataContext as PluginModel).First();
-                    eventAggregator.Publish(new DisplayPropertiesView1Event(t.GetProperties()));
+                    if (FirstSelected != null && s == FirstSelected)
+                    {
+                        RemoveAdorners();
+                        FirstSelected = null;
+                        NbrSelected = 0;
+                    }
+                    else
+                    {
+                        if (NbrSelected > 0)
+                        {
+                            RemoveAdorner(s);
+                            NbrSelected = DictContentcontrol.Where(item => item.Value).Count();
+                        }
+                    }
                 }
-                return;
+                else
+                {
+                    if (NbrSelected == 0)
+                        FirstSelected = s;
+                    AddNewAdorner(s, NbrSelected++ == 0);
+                }
+            }
+            else
+            {
+                if (!DictContentcontrol[s])
+                {
+                    RemoveAdorners();
+                    AddNewAdorner(s, true);
+                    FirstSelected = s;
+                    NbrSelected = 1;
+                }
             }
 
 
-            if (!CtrlDown)
-                RemoveAdorners();
-            AddNewAdorner(s);
-
-            if (nbr == 0)
-                eventAggregator.Publish(new DisplayPropertiesView1Event((s.DataContext as PluginModel).GetProperties()));
+            if (NbrSelected== 0)
+                eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { LayoutMonitor }));
+            else
+                eventAggregator.Publish(new DisplayPropertiesView1Event((FirstSelected.DataContext as PluginModel).GetProperties()));
         }
 
         public void MouseGridEnter(object sender)
@@ -294,11 +342,6 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
         public int nbrfois = 0;
         void IDropTarget.DragOver(IDropInfo dropInfo)
         {
-            //if (nbrfois <= 2)
-            //{
-            //    System.Diagnostics.Debug.WriteLine($"IDropTarget.DragOver {dropInfo.DropPosition}");
-            //    nbrfois++;
-            //}
             if (dropInfo.Data is ToolBoxGroup /*&& dropInfo.TargetItem is MonitorViewModel*/)
             {
                 
@@ -307,26 +350,6 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                 tbg.AnchorMouse = new Point(0.0, 0.0);
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
                 dropInfo.Effects = DragDropEffects.Move;
-                //int left = (int)dropInfo.DropPosition.X;
-                //int top = (int)dropInfo.DropPosition.Y;
-                //var translateX = 0;
-                //var translateY = 0;
-                //bool inrect = false;
-                //if (left > 0 && left < 25 )
-                //{
-                //    inrect = true;
-                //    var w = tbg.SelectedToolBoxItem.ImageWidth / 2;
-                //    translateX = w;
-                //}
-                //if ((left > 0 && left < 25) || (top > 0 && top < 25))
-                //{
-                //    inrect = true;
-                //    var h = tbg.SelectedToolBoxItem.ImageHeight / 2;
-                //    translateY = h;
-
-                //    //tbg.Translation = new Point(50, 0);
-                //}
-                //if (inrect) tbg.Translation = new Point(translateX, translateY);
             }
         }
 
@@ -359,13 +382,14 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                 param = new Ninject.Parameters.Parameter[]
                 {
                         new ConstructorArgument("settings", new object[]{
-                            $"{nameUC}",                                                        // name of UC
-                            new int[] {left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0 }, // Left, Top, Width, Height, Angle
+                            true,                                                                                               //0 is in Mode Editor?
+                            $"{nameUC}",                                                                                        //1 name of UC
+                            new int[] { left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0 },//2 [Left, Top, Width, Height, Angle]
 
-                            new string[]{ FullImage, FullImage1 }, 0,                                                           // images & startimageposition
-                            2d, 0.8d, (PushButtonGlyph)0, Colors.White,                                                         // Glyph: Thickness, Scale, Type, Color
+                            new string[]{ FullImage, FullImage1 }, 0,                                                           //3 [images] & startimageposition
+                            2d, 0.8d, (PushButtonGlyph)0, Colors.White,                                                         //5 Glyph: Thickness, Scale, Type, Color
 
-                            0                                                                                                   // Button Type
+                            0                                                                                                   //9 Button Type
                                                                         }, true)
                 };
 
@@ -381,23 +405,26 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                     {
                         // Layout
                         new ConstructorArgument("settings", new object[]{
-                            $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            // name of UC
-                            left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0,                  // Left, Top, Width, Height, Angle
-                            tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0,
+                            true,                                                                                                   //0 In Mode Editor?
+                            $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            //1 name of UC
+                            left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0,                  //2 [Left, Top, Width, Height, Angle]
+                            tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0,                             
                             0, 1d, 0, 3 }, true)
                     },
                         // Appearance
                     new Ninject.Parameters.Parameter[] 
                     {
                         new ConstructorArgument("settings", new object[]{
-                            $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            // name of UC
-                            new string[]{ FullImage, FullImage1 }, 0,                                                               // images, start image position
+                            true,                                                                                                   //0 In Mode Editor?
+                            $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            //1 name of UC
+                            new string[]{ FullImage, FullImage1 }, 0,                                                               //2 images, start image position
                             new TextFormat() }, true)
                     },
                         // Behavior
                     new Ninject.Parameters.Parameter[]
                     { 
                         new ConstructorArgument("settings", new object[]{
+                            true,                                                                                                   // In Mode Editor?
                             $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            // name of UC
                             0, 1d, 0, 3 }, true)}
                     };
@@ -411,12 +438,13 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
 
                 param = new Ninject.Parameters.Parameter[]
                 {
-                new ConstructorArgument("settings", new object[]{
-                            $"{tbg.SelectedToolBoxItem.ShortImageName}", left, top, Tag * 90,
-                             FullImage,
-                             FullImage1,
-                             FullImage2,
-                            tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight,
+                        new ConstructorArgument("settings", new object[]{
+                            true,                                                                                               //0 is in Mode Editor?
+                            $"{nameUC}",                                                                                        //1 name of UC
+                            new int[] { left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0 },//2 [Left, Top, Width, Height, Angle]
+
+                            new string[]{ FullImage, FullImage1, FullImage2 , "", "", "" }, 0,                                  //3 [images] & startimageposition
+
                             2, 1d, 2, 3 }, true)
                 };
 
@@ -431,8 +459,8 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             ViewModelBinder.Bind(viewmodel, view, null);
             var v = viewmodel as PluginModel;
             v.ZoomFactor = ZoomFactor;
-            v.IsUCSelected = true;
-            UnselectAll();
+
+            //RemoveAdorners();
             MyCockpitViewModels.Add((PluginModel)viewmodel);
             eventAggregator.Publish(new DragSelectedItemEvent(tbg.SelectedToolBoxItem));
 
@@ -497,51 +525,51 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             }
         }
 
-        public void UnselectAll()
-        {
-            foreach (var p in MyCockpitViewModels)
-            {
-                p.IsUCSelected = false;
-            }
+        //public void UnselectAll()
+        //{
+        //    foreach (var p in MyCockpitViewModels)
+        //    {
+        //        p.IsUCSelected = false;
+        //    }
 
-            ProcessElement((DependencyObject)GetView());
-            void ProcessElement(DependencyObject element)
-            {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
-                {
-                    Visual childVisual = (Visual)VisualTreeHelper.GetChild(element, i);
-                    var t = childVisual.GetType().Name;
-                    if (t.Contains("ContentControl"))
-                    {
-                        var s = childVisual as ContentControl;
-                        AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(s);
+        //    ProcessElement((DependencyObject)GetView());
+        //    void ProcessElement(DependencyObject element)
+        //    {
+        //        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+        //        {
+        //            Visual childVisual = (Visual)VisualTreeHelper.GetChild(element, i);
+        //            var t = childVisual.GetType().Name;
+        //            if (t.Contains("ContentControl"))
+        //            {
+        //                var s = childVisual as ContentControl;
+        //                AdornerLayer adornerLayer = AdornerLayer.GetAdornerLayer(s);
 
-                        if (adornerLayer != null)
-                        {
-                            Adorner[] adorners = adornerLayer.GetAdorners(s);
-                            if (adorners != null)
-                            {
-                                foreach (Adorner adorner in adorners)
-                                {
-                                    if (typeof(MyAdorner).IsAssignableFrom(adorner.GetType()))
-                                    {
-                                        adornerLayer.Remove(adorner);
-                                    }
-                                }
-                                return;
-                            }
-                        }
-                    }
+        //                if (adornerLayer != null)
+        //                {
+        //                    Adorner[] adorners = adornerLayer.GetAdorners(s);
+        //                    if (adorners != null)
+        //                    {
+        //                        foreach (Adorner adorner in adorners)
+        //                        {
+        //                            if (typeof(MyAdorner).IsAssignableFrom(adorner.GetType()))
+        //                            {
+        //                                adornerLayer.Remove(adorner);
+        //                            }
+        //                        }
+        //                        return;
+        //                    }
+        //                }
+        //            }
 
-                    //var childContentVisual = childVisual as ContentControl;
-                    //if (childContentVisual != null)
-                    //{
-                    //    var content = childContentVisual.Content;
-                    //}
-                    ProcessElement(childVisual);
-                }
-            }
-        }
+        //            //var childContentVisual = childVisual as ContentControl;
+        //            //if (childContentVisual != null)
+        //            //{
+        //            //    var content = childContentVisual.Content;
+        //            //}
+        //            ProcessElement(childVisual);
+        //        }
+        //    }
+        //}
 
         public Type DataType => typeof(MonitorViewModel);
 

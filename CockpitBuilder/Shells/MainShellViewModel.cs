@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using CockpitBuilder.Common.AvalonDock;
 using CockpitBuilder.Core.Common;
 using CockpitBuilder.Core.Persistence;
@@ -14,6 +9,9 @@ using CockpitBuilder.Views.Main.DockPanel;
 using CockpitBuilder.Views.Main.DockPanel.Panels;
 using CockpitBuilder.Views.Main.Menu;
 using CockpitBuilder.Views.Main.ToolBarTray;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using Xceed.Wpf.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 using IEventAggregator = CockpitBuilder.Core.Common.Events.IEventAggregator;
@@ -58,7 +56,10 @@ namespace CockpitBuilder.Shells
 
            mainMenuViewModel.NewProfile();
         }
+        public void AlignBottom()
+        {
 
+        }
         protected override void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
@@ -160,6 +161,7 @@ namespace CockpitBuilder.Shells
 
             ActiveDocument = message.Document;
         }
+
 
         public void Handle(ExitingEvent message)
         {

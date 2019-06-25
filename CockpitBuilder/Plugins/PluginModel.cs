@@ -6,7 +6,8 @@ namespace CockpitBuilder.Plugins
 {
     public abstract class PluginModel : PropertyChangedBase
     {
-
+        public abstract double Width { get; set; }
+        public abstract double Height { get; set; }
         public abstract double Left { get; set; }
         public abstract double Top { get; set; }
         public abstract PropertyEditorModel[] GetProperties();
@@ -21,16 +22,16 @@ namespace CockpitBuilder.Plugins
                 NotifyOfPropertyChange(() => ZoomFactor);
             }
         }
-        private bool isucSelected;
-        public bool IsUCSelected
-        {
-            get => isucSelected;
-            set
-            {
-                isucSelected = value;
-                NotifyOfPropertyChange(() => IsUCSelected);
-            }
-        }
+        //private bool isucSelected;
+        //public bool IsUCSelected
+        //{
+        //    get => isucSelected;
+        //    set
+        //    {
+        //        isucSelected = value;
+        //        NotifyOfPropertyChange(() => IsUCSelected);
+        //    }
+        //}
         public bool IsClickCommingFromMonitorViewModel;
         public string NameUC;
     }

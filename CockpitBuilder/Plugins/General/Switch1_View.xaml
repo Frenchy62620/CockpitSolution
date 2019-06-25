@@ -8,7 +8,10 @@
     mc:Ignorable="d" d:DesignHeight="150" d:DesignWidth="70"
     x:Name="usercontrol"  ToolTip="{Binding ToolTip}"
     VerticalAlignment = "Top" HorizontalAlignment = "Left" ClipToBounds="True"
-    cal:Message.Attach="[Event MouseEnter] = [Action MouseEnter($eventArgs)]">
+    cal:Message.Attach="[Event MouseEnter] = [Action MouseEnterInUC($eventArgs)];
+                        [Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnUC($source, $mousepoint, $eventArgs)];
+                        [Event MouseLeftButtonUp] = [Action MouseLeftButtonUp()]">
+    
     <!--RenderTransformOrigin="0.5,0.5"-->
     <UserControl.RenderTransform>
         <TransformGroup>
@@ -22,13 +25,13 @@
                Width="{Binding ElementName=usercontrol, Path=Width}"
                Height="{Binding ElementName=usercontrol, Path=Height}"
         -->
-        <Image x:Name="SwitchUp" Source="{Binding Image2, Mode=TwoWay, TargetNullValue={x:Null}}"
+        <Image x:Name="SwitchUp" Source="{Binding Appearance.PositionImage2, Mode=TwoWay, TargetNullValue={x:Null}}"
                HorizontalAlignment="Center" VerticalAlignment="Center" >
             <Image.Style>
                 <Style TargetType="{x:Type Image}">
                     <Setter Property="Visibility" Value="Hidden" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding SwitchIndex}" Value="2">
+                        <DataTrigger Binding="{Binding Appearance.IndexImage}" Value="2">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -36,13 +39,13 @@
             </Image.Style>
         </Image>
 
-        <Image x:Name="SwitchMiddle" Source="{Binding Image1, Mode=TwoWay}"
+        <Image x:Name="SwitchMiddle" Source="{Binding Appearance.PositionImage1, Mode=TwoWay}"
                HorizontalAlignment="Center" VerticalAlignment="Center" >
             <Image.Style>
                 <Style TargetType="{x:Type Image}">
                     <Setter Property="Visibility" Value="Hidden" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding SwitchIndex}" Value="1">
+                        <DataTrigger Binding="{Binding Appearance.IndexImage}" Value="1">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -50,13 +53,13 @@
             </Image.Style>
         </Image>
 
-        <Image x:Name="SwitchDown" Source="{Binding Image0, Mode=TwoWay}"
+        <Image x:Name="SwitchDown" Source="{Binding Appearance.PositionImage0, Mode=TwoWay}"
                HorizontalAlignment="Center" VerticalAlignment="Center" >
             <Image.Style>
                 <Style TargetType="{x:Type Image}">
                     <Setter Property="Visibility" Value="Hidden" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding SwitchIndex}" Value="0">
+                        <DataTrigger Binding="{Binding Appearance.IndexImage}" Value="0">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -81,12 +84,12 @@
                    HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource IsModeEdit}" >
         </Rectangle>-->
 
-        <Rectangle x:Name="DesignFrame"
+        <!--<Rectangle x:Name="DesignFrame"
                    Width="{Binding ElementName=Switch, Path=Width, UpdateSourceTrigger=PropertyChanged}"
                    Height="{Binding ElementName=Switch, Path=Height, UpdateSourceTrigger=PropertyChanged}"
                    Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource IsModeSelected}"
                    cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDown($source, $mousepoint, $eventArgs)];[Event MouseLeftButtonUp] = [Action MouseLeftButtonUp]" >
-        </Rectangle>
+        </Rectangle>-->
         <!--Visibility="{Binding Frame, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisConverter}}"-->
     </Grid>
 </UserControl>

@@ -253,8 +253,6 @@ namespace CockpitBuilder.Views.Main.DockPanel.Models
                 //    node = node.Next;
                 //}
                 Points.First.Value.Value = value;
-                //OnCalibrationChanged();
-                //OnPropertyChanged("MinimumInputValue", oldValue, value, false);
             }
         }
 
@@ -273,8 +271,6 @@ namespace CockpitBuilder.Views.Main.DockPanel.Models
                     node = node.Next;
                 }
                 Points.First.Value.Multiplier = value;
-                //OnCalibrationChanged();
-                //OnPropertyChanged("MinimumOutputValue", oldValue, value, false);
             }
         }
     }

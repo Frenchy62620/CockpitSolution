@@ -9,122 +9,68 @@ using IEventAggregator = CockpitBuilder.Core.Common.Events.IEventAggregator;
 namespace CockpitBuilder.Plugins.General
 {
     public class Switch1_ViewModel : PluginModel, Core.Common.Events.IHandle<EditEvent>, 
-                                                  Core.Common.Events.IHandle<TransformEvent>,
-                                                  Core.Common.Events.IHandle<SelectedEvent>
+                                                  Core.Common.Events.IHandle<TransformEvent>
     {
         private readonly IEventAggregator eventAggregator;
-        private readonly string tag;
 
-        private readonly int deviceType;
-
-        public ThreeWayToggleSwitchAppearanceEditorViewModel Appearance { get; }
         public LayoutPropertyEditorViewModel Layout { get; }
-        private readonly ThreeWayToggleSwitchBehaviorEditorViewModel behavior;
-        private readonly int nbPosition;
+        public ThreeWayToggleSwitchAppearanceEditorViewModel Appearance { get; }
+        public ThreeWayToggleSwitchBehaviorEditorViewModel Behavior { get; }
 
-        private bool pushButton;
-        public Switch1_ViewModel(IEventAggregator eventAggregator, LayoutPropertyEditorViewModel layout, 
-                                                                   ThreeWayToggleSwitchAppearanceEditorViewModel appearance, 
-                                                                   ThreeWayToggleSwitchBehaviorEditorViewModel behavior,
-                                                                   params object[] settings)
+
+        public Switch1_ViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
+            Layout = new LayoutPropertyEditorViewModel(eventAggregator, settings);
+            Appearance = new ThreeWayToggleSwitchAppearanceEditorViewModel(eventAggregator, settings);
+            Behavior = new ThreeWayToggleSwitchBehaviorEditorViewModel(eventAggregator, settings);
+
+            NameUC = (string)settings[1];
+
+            //ScaleX = (double)settings[10];
+            ScaleX = 1;
+
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
-
-            appearance.DeviceModel = this;
-            behavior.DeviceModel = this;
-
-            Layout = layout;
-            Appearance = appearance;
-            this.behavior = behavior;
-            this.behavior.AppearancewModel = appearance;
-
-            tag = (string)settings[0];
-            layout.UCLeft = (int)settings[1];
-            layout.UCTop = (int)settings[2];
-
-
-            appearance.PositionImage0 = (string)settings[4];
-            appearance.PositionImage1 = (string)settings[5];
-            appearance.PositionImage2 = (string)settings[6];
-            behavior.HasIndicator = false;
-            behavior.SelectedSwitchTypeIndex = (int)settings[9];
-            behavior.DefaultInitialPosition = (int)settings[11];
-
-            layout.Width = (int)settings[7];
-            layout.Height = (int)settings[8];
-            layout.AngleRotation = (int)settings[3];
-
-            ScaleX = (double)settings[10];
-
-            nbPosition = (int)settings[12];
-
-            eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)layout, appearance, behavior }));
-
-            Frame = true;
         }
 
-        public override double Left { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-        public override double Top { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        #region PluginModel
+        public override double Left
+        {
+            get => Layout.UCLeft;
+            set => Layout.UCLeft = value;
+        }
+        public override double Top
+        {
+            get => Layout.UCTop;
+            set => Layout.UCTop = value;
+        }
+        public override double Width
+        {
+            get => Layout.Width;
+            set => Layout.Width = value;
+        }
+        public override double Height
+        {
+            get => Layout.Height;
+            set => Layout.Height = value;
+        }
+
         public override PropertyEditorModel[] GetProperties()
         {
-            return new PropertyEditorModel[] { Layout, Appearance };
+            return new PropertyEditorModel[] { Layout, Appearance, Behavior };
         }
+        #endregion
 
         ~Switch1_ViewModel()
         {
             System.Diagnostics.Debug.WriteLine("sortie switch");
         }
-        #region Selection Image
 
-        private string image0;
-        public string Image0
-        {
-            get => image0;
-            set
-            {
-                image0 = value;
-                NotifyOfPropertyChange(() => Image0);
-            }
-        }
-        private string image1;
-        public string Image1
-        {
-            get => image1;
-            set
-            {
-                image1 = value;
-                NotifyOfPropertyChange(() => Image1);
-            }
-        }
-        private string image2;
-        public string Image2
-        {
-            get => image2;
-            set
-            {
-                image2 = value;
-                NotifyOfPropertyChange(() => Image2);
-            }
-        }
-
-        private int _switchIndex;
-        public int SwitchIndex
-        {
-            get { return _switchIndex; }
-            set
-            {
-                _switchIndex = value;
-                NotifyOfPropertyChange(() => SwitchIndex);
-            }
-        }
-        #endregion
 
         #region Mouse Events
-        public void MouseLeftButtonDown(IInputElement elem, Point pos, MouseEventArgs e)
+        public void MouseLeftButtonDownOnUC(IInputElement elem, Point pos, MouseEventArgs e)
         {
-           if (IsClickCommingFromMonitorViewModel)
-                eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)Layout, Appearance, behavior }));
+
 
             //e.Handled = true;
             //var r = elem as Rectangle;
@@ -142,12 +88,12 @@ namespace CockpitBuilder.Plugins.General
         //MomOnOn,
         //[Description("Mom - On - Mom")]
         //MomOnMom
-            switch (behavior.SelectedSwitchTypeIndex)
+            switch (Behavior.SelectedSwitchTypeIndex)
             {
                 case 0:
                 case 1:
                 case 2:
-                    SwitchIndex = 1 - SwitchIndex;
+                    Appearance.IndexImage = 1 - Appearance.IndexImage;
                     return;
                 default:
                     switch(Layout.AngleRotation)
@@ -155,16 +101,16 @@ namespace CockpitBuilder.Plugins.General
                         case 0:
                         case 180:
                             if (pos.Y < Layout.Height / 2)
-                                SwitchIndex = SwitchIndex == 1 ? 2 : 1;
+                                Appearance.IndexImage = Appearance.IndexImage == 1 ? 2 : 1;
                             else
-                                SwitchIndex = SwitchIndex == 1 ? 0 : 1;
+                                Appearance.IndexImage = Appearance.IndexImage == 1 ? 0 : 1;
                             break;
                         case 90:
                         case 270:
                             if (pos.Y < Layout.Height / 2)
-                                SwitchIndex = SwitchIndex == 1 ? 2 : 1;
+                                Appearance.IndexImage = Appearance.IndexImage == 1 ? 2 : 1;
                             else
-                                SwitchIndex = SwitchIndex == 1 ? 0 : 1;
+                                Appearance.IndexImage = Appearance.IndexImage == 1 ? 0 : 1;
                             break;
                     }
                     break;
@@ -174,28 +120,28 @@ namespace CockpitBuilder.Plugins.General
 
         public void MouseLeftButtonUp()
         {
-            switch (behavior.SelectedSwitchTypeIndex)
+            switch (Behavior.SelectedSwitchTypeIndex)
             {
                 case 1:
                 case 2:
-                    SwitchIndex = 1 - SwitchIndex;
+                    Appearance.IndexImage = 1 - Appearance.IndexImage;
                     break;
                 case 4:
-                    if (SwitchIndex == 2) SwitchIndex = 1;
+                    if (Appearance.IndexImage == 2) Appearance.IndexImage = 1;
                     break;
                 case 5:
-                    if (SwitchIndex == 0) SwitchIndex = 1;
+                    if (Appearance.IndexImage == 0) Appearance.IndexImage = 1;
                     break;
                 case 6:
-                    SwitchIndex = 1;
+                    Appearance.IndexImage = 1;
                     break;
             }
             Mouse.Capture(null);
         }
 
-        public void MouseEnter(MouseEventArgs e)
+        public void MouseEnterInUC(MouseEventArgs e)
         {
-            ToolTip = $"({Layout.UCLeft}, {Layout.UCTop})\n({ScaleX:0.##}, {(ScaleX * Layout.Width):0.##}, {(ScaleX * Layout.Height):0.##}), Tag = {tag}";
+            //ToolTip = $"({Layout.UCLeft}, {Layout.UCTop})\n({ScaleX:0.##}, {(ScaleX * Layout.Width):0.##}, {(ScaleX * Layout.Height):0.##}), Tag = {tag}";
         }
         #endregion
 
@@ -271,25 +217,6 @@ namespace CockpitBuilder.Plugins.General
                 return;
             }
             ScaleX = ScaleX * (translate.Size + Layout.Width) / Layout.Width;
-        }
-        public void Handle(SelectedEvent message)
-        {
-            if (string.IsNullOrEmpty(message.Tag))
-            {
-                IsSelected = false;
-                return;
-            }
-
-            if (message.Tag[0] != '+')
-            {
-                IsSelected = message.Tag.Equals(tag);
-                return;
-            }
-
-            if (tag.Equals(message.Tag.Substring(1)) && message.Tag[0] == '+')
-            {
-                IsSelected = !IsSelected;
-            }
         }
         #endregion
     }

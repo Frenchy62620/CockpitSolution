@@ -10,7 +10,9 @@
     mc:Ignorable="d" d:DesignHeight="150" d:DesignWidth="70"
     x:Name="usercontrol"  ToolTip="{Binding ToolTip}"
     VerticalAlignment = "Top" HorizontalAlignment = "Left" ClipToBounds="True"
-    cal:Message.Attach="[Event MouseEnter] = [Action MouseEnter($eventArgs)]">
+    cal:Message.Attach="[Event MouseEnter] = [Action MouseEnterInUC($eventArgs)];
+                        [Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnUC($source, $mousepoint, $eventArgs)];
+                        [Event MouseLeftButtonUp] = [Action MouseLeftButtonUp()]">
     <!--RenderTransformOrigin="0.5,0.5"    ;[Event MouseLeftButtonDown] = [Action MouseLeftButtonDown($source, $mousepoint, 'false')]" -->
     <!--<UserControl.RenderTransform>
         <TransformGroup>
@@ -86,13 +88,13 @@
             </TextBlock.Style>
         </TextBlock>
         
-        <Rectangle x:Name="DesignFrame"
+        <!--<Rectangle x:Name="DesignFrame"
                    Width="{Binding ElementName=Switch, Path=Width, UpdateSourceTrigger=PropertyChanged}"
                    Height="{Binding ElementName=Switch, Path=Height, UpdateSourceTrigger=PropertyChanged}"
                    Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource IsModeSelected}"
                    cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDown($source, $mousepoint, $eventArgs, $executionContext, $datacontext)];
                                        [Event MouseLeftButtonUp] = [Action MouseLeftButtonUp]" >
-        </Rectangle>
+        </Rectangle>-->
 
         <Path StrokeThickness="{Binding Appearance.GlyphThickness}" Stroke="{Binding Appearance.GlyphColor, Converter={StaticResource MyconverterColorToSolidColorBrush}}" >
             <Path.Fill>

@@ -3,7 +3,7 @@
 
 namespace CockpitBuilder.Common.PropertyEditors
 {
-    public class PropertyEditorModel:Screen
+    public abstract class PropertyEditorModel:Screen
     {
 
     }

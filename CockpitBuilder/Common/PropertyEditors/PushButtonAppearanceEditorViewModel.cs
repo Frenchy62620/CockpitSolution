@@ -19,25 +19,31 @@ namespace CockpitBuilder.Common.PropertyEditors
     {
         private readonly IEventAggregator eventAggregator;
 
-        public string NameUC;
+        public string NameUC { get; set; }
         public PushButtonAppearanceEditorViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
-            var view = ViewLocator.LocateForModel(this, null, null);
-            ViewModelBinder.Bind(this, view, null);
 
-            Name = "Appearance";
+            bool IsModeEditor = (bool)settings[0];
+            if (IsModeEditor)
+            {
+                var view = ViewLocator.LocateForModel(this, null, null);
+                ViewModelBinder.Bind(this, view, null);
+            }
+
+            NameUC = (string)settings[1];
 
             VAlignTypes = Enum.GetValues(typeof(TextVerticalAlignment)).Cast<TextVerticalAlignment>().ToList();
             HAlignTypes = Enum.GetValues(typeof(TextHorizontalAlignment)).Cast<TextHorizontalAlignment>().ToList();
 
-            Image = ((string[])settings[2])[0];
-            PushedImage = ((string[])settings[2])[1];
-            IndexImage = (int)settings[3];
+            var index = 3;
+            Image = ((string[])settings[index])[0];
+            PushedImage = ((string[])settings[index++])[1];
+            IndexImage = (int)settings[index++];
 
-            GlyphThickness = (double)settings[4];
-            GlyphScale = (double)settings[5];
-            SelectedPushButtonGlyph = (PushButtonGlyph)(int)settings[6];
-            GlyphColor = (Color)settings[7];
+            GlyphThickness = (double)settings[index++];
+            GlyphScale = (double)settings[index++];
+            SelectedPushButtonGlyph = (PushButtonGlyph)(int)settings[index++];
+            GlyphColor = (Color)settings[index++];
             GlyphText = "";
             TextPushOffset = "1,1";
             SelectedVAlignType = TextVerticalAlignment.Center;
@@ -56,7 +62,8 @@ namespace CockpitBuilder.Common.PropertyEditors
 
             eventAggregator.Subscribe(this);
             this.eventAggregator = eventAggregator;
- //           eventAggregator.Publish(new NewAppearanceEvent(NameUC, Appearance));
+
+            Name = "Appearance";
         }
 
         //~PushButtonAppearanceEditorViewModel()

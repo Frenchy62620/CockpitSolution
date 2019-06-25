@@ -17,27 +17,34 @@ namespace CockpitBuilder.Common.PropertyEditors
         public double Factor;
         public LayoutPropertyEditorViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
-            var view = ViewLocator.LocateForModel(this, null, null);
-            ViewModelBinder.Bind(this, view, null);
+            bool IsModeEditor = (bool)settings[0];
+            if (IsModeEditor)
+            {
+                var view = ViewLocator.LocateForModel(this, null, null);
+                ViewModelBinder.Bind(this, view, null);
+            }
 
-            NameUC = (string)settings[0];
-            UCLeft = ((int[])settings[1])[0];
-            UCTop = ((int[])settings[1])[1];
+
+
+            NameUC = (string)settings[1];
+            UCLeft = ((int[])settings[2])[0];
+            UCTop = ((int[])settings[2])[1];
             
-            var width = (double)((int[])settings[1])[2];
-            var height = (double)((int[])settings[1])[3];
+            var width = (double)((int[])settings[2])[2];
+            var height = (double)((int[])settings[2])[3];
+            AngleRotation = ((int[])settings[2])[4];
 
             Factor = height / width;
 
             Width = width;
             Height = height;
 
-            AngleRotation = ((int[])settings[1])[4];
+
 
             this.eventAggregator = eventAggregator;
-            Name = "Layout";
-            ImageIndex = 0;
             eventAggregator.Subscribe(this);
+
+            Name = "Layout";
         }
 
 

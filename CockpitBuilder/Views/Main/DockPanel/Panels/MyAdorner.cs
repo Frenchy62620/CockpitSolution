@@ -11,12 +11,19 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
 {
     public class MyAdorner : Adorner
     {
-        public MyAdorner(UIElement targetElement) : base(targetElement) { }
+        private readonly bool first;
+        public MyAdorner(UIElement targetElement, bool first) : base(targetElement)
+        {
+            this.first = first;
+        }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
             Rect adornedElementRect = new Rect(this.AdornedElement.DesiredSize);
-            drawingContext.DrawRectangle(null, new Pen(Brushes.Green, 4), adornedElementRect);
+            if (first)
+                drawingContext.DrawRectangle(null, new Pen(Brushes.Orange, 4), adornedElementRect);
+            else
+                drawingContext.DrawRectangle(null, new Pen(Brushes.Green, 4), adornedElementRect);
         }
     }
 }

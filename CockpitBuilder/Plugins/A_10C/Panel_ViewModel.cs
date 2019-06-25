@@ -6,7 +6,7 @@ using CockpitBuilder.Events;
 
 namespace CockpitBuilder.Plugins.A_10C
 {
-    public class Panel_ViewModel : PluginModel, IHandle<EditEvent>, IHandle<TransformEvent>, IHandle<SelectedEvent>
+    public class Panel_ViewModel : PluginModel, IHandle<EditEvent>, IHandle<TransformEvent>
     {
         private readonly IEventAggregator eventAggregator;
         private readonly string tag;
@@ -28,8 +28,32 @@ namespace CockpitBuilder.Plugins.A_10C
 
             Frame = true;
         }
+
+        //public override double Left
+        //{
+        //    get => Layout.UCLeft;
+        //    set => Layout.UCLeft = value;
+        //}
+        //public override double Top
+        //{
+        //    get => Layout.UCTop;
+        //    set => Layout.UCTop = value;
+        //}
+        //public override double Width
+        //{
+        //    get => Layout.Width;
+        //    set => Layout.Width = value;
+        //}
+        //public override double Height
+        //{
+        //    get => Layout.Height;
+        //    set => Layout.Height = value;
+        //}
+
         public override double Left { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
         public override double Top { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public override double Width { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+        public override double Height { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
         public override PropertyEditorModel[] GetProperties()
         {
             return new PropertyEditorModel[] { };
@@ -160,25 +184,6 @@ namespace CockpitBuilder.Plugins.A_10C
                 return;
             }
             ScaleX = ScaleX * (translate.Size + ImageSize[0]) / ImageSize[0];
-        }
-        public void Handle(SelectedEvent message)
-        {
-            if (string.IsNullOrEmpty(message.Tag))
-            {
-                IsSelected = false;
-                return;
-            }
-
-            if (message.Tag[0] != '+')
-            {
-                IsSelected = message.Tag.Equals(tag);
-                return;
-            }
-
-            if (tag.Equals(message.Tag.Substring(1)) && message.Tag[0] == '+')
-            {
-                IsSelected = !IsSelected;
-            }
         }
         #endregion
     }

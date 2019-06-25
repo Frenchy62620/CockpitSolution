@@ -10,17 +10,16 @@ using IEventAggregator = CockpitBuilder.Core.Common.Events.IEventAggregator;
 
 namespace CockpitBuilder.Plugins.General
 {
-    public class PushButton_ViewModel : PluginModel, Core.Common.Events.IHandle<EditEvent>,
-                                                     Core.Common.Events.IHandle<TransformEvent>,
-                                                     Core.Common.Events.IHandle<SelectedEvent>,
-                                                     Core.Common.Events.IHandle<NewLayoutEvent>,
-                                                     Core.Common.Events.IHandle<NewAppearanceEvent>,
-                                                     IPlugin
+    public class PushButton_ViewModel : PluginModel  /*Core.Common.Events.IHandle<EditEvent>,*/
+                                                     //Core.Common.Events.IHandle<TransformEvent>,
+                                                     //Core.Common.Events.IHandle<SelectedEvent>,
+                                                     //Core.Common.Events.IHandle<NewLayoutEvent>,
+                                                     //Core.Common.Events.IHandle<NewAppearanceEvent>,
+                                                     //IPlugin
     {
         private readonly IEventAggregator eventAggregator;
-        private readonly string tag;
+
         public PushButtonAppearanceEditorViewModel Appearance { get; }
-        //public PushButtonAppearanceEditorViewModel Appearance { get; private set; }
         public LayoutPropertyEditorViewModel Layout { get; }
         public PushButtonBehaviorEditorViewModel Behavior { get; }
 
@@ -30,19 +29,17 @@ namespace CockpitBuilder.Plugins.General
             Appearance = new PushButtonAppearanceEditorViewModel(eventAggregator, settings);
             Behavior = new PushButtonBehaviorEditorViewModel(eventAggregator, settings);
 
-            base.IsUCSelected = true;
 
-            NameUC = (string)settings[0];
+            NameUC = (string)settings[1];
 
 
-            //eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)Layout, Appearance, Behavior }));
-
-            Frame = false;
+            //Frame = false;
 
             this.eventAggregator = eventAggregator;
             this.eventAggregator.Subscribe(this);
         }
 
+        #region PluginModel
         public override double Left
         {
             get => Layout.UCLeft;
@@ -53,15 +50,23 @@ namespace CockpitBuilder.Plugins.General
             get => Layout.UCTop;
             set => Layout.UCTop = value;
         }
-        //public override Point GetPosition()
-        //{
-        //    return new Point(Layout.UCLeft, Layout.UCTop);
-        //}
+        public override double Width
+        {
+            get => Layout.Width;
+            set => Layout.Width = value;
+        }
+        public override double Height
+        {
+            get => Layout.Height;
+            set => Layout.Height = value;
+        }
 
         public override PropertyEditorModel[] GetProperties()
         {
             return new PropertyEditorModel[] { Layout, Appearance, Behavior };
         }
+        #endregion
+
 
         ~PushButton_ViewModel()
         {
@@ -71,45 +76,45 @@ namespace CockpitBuilder.Plugins.General
 
         #endregion
 
-        private double pluginwidth;
-        public double PluginWidth
-        {
-            get => pluginwidth;
-            set
-            {
-                if (pluginwidth != value)
-                {
-                    pluginwidth = value;
-                    NotifyOfPropertyChange(() => PluginWidth);
-                }
-            }
-        }
+        //private double pluginwidth;
+        //public double PluginWidth
+        //{
+        //    get => pluginwidth;
+        //    set
+        //    {
+        //        if (pluginwidth != value)
+        //        {
+        //            pluginwidth = value;
+        //            NotifyOfPropertyChange(() => PluginWidth);
+        //        }
+        //    }
+        //}
 
-        private double pluginheight;
-        public double PluginHeight
-        {
-            get => pluginheight;
-            set
-            {
-                if (pluginheight != value)
-                {
-                    pluginheight = value;
-                    NotifyOfPropertyChange(() => PluginHeight);
-                }
-            }
-        }
+        //private double pluginheight;
+        //public double PluginHeight
+        //{
+        //    get => pluginheight;
+        //    set
+        //    {
+        //        if (pluginheight != value)
+        //        {
+        //            pluginheight = value;
+        //            NotifyOfPropertyChange(() => PluginHeight);
+        //        }
+        //    }
+        //}
 
 
         #region Mouse Events
-        public void MouseLeftButtonDown(IInputElement elem, Point pos, MouseEventArgs e, object t, object dc)
+        public void MouseLeftButtonDownOnUC(IInputElement elem, Point pos, MouseEventArgs e)
         {
-            if (IsClickCommingFromMonitorViewModel && !IsUCSelected)
-            {
-                eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)Layout, Appearance, Behavior }));
-                IsUCSelected = true;
-                if (e != null)
-                    e.Handled = true;
-            }
+            //if (IsClickCommingFromMonitorViewModel)
+            //{
+            //    eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)Layout, Appearance, Behavior }));
+
+            //    if (e != null)
+            //        e.Handled = true;
+            //}
 
             Mouse.Capture((UIElement)elem);
             //((UIElement)elem).CaptureMouse();
@@ -121,7 +126,7 @@ namespace CockpitBuilder.Plugins.General
             Mouse.Capture(null);
             Appearance.IndexImage = 0;
         }
-        public void MouseEnter(MouseEventArgs e)
+        public void MouseEnterInUC(MouseEventArgs e)
         {
             /*{Appearance.Center})\n({ScaleX:0.##}*/
             //ToolTip = $"({Layout.UCLeft}, , {(ScaleX * Appearance.GlyphThickness):0.##}, {(ScaleX * Layout.Height):0.##}), Tag = {tag}";
@@ -129,26 +134,26 @@ namespace CockpitBuilder.Plugins.General
         #endregion
 
         #region Mode Edition
-        private bool _frame;
-        public bool Frame
-        {
-            get { return _frame; }
-            set
-            {
-                _frame = value;
-                NotifyOfPropertyChange(() => Frame);
-            }
-        }
-        private bool _isSelected;
-        public bool IsSelected
-        {
-            get { return _isSelected; }
-            set
-            {
-                _isSelected = value;
-                NotifyOfPropertyChange(() => IsSelected);
-            }
-        }
+        //private bool _frame;
+        //public bool Frame
+        //{
+        //    get { return _frame; }
+        //    set
+        //    {
+        //        _frame = value;
+        //        NotifyOfPropertyChange(() => Frame);
+        //    }
+        //}
+        //private bool _isSelected;
+        //public bool IsSelected
+        //{
+        //    get { return _isSelected; }
+        //    set
+        //    {
+        //        _isSelected = value;
+        //        NotifyOfPropertyChange(() => IsSelected);
+        //    }
+        //}
         #endregion
 
         #region Scale, rotation, XY translation usercontrol
@@ -177,35 +182,9 @@ namespace CockpitBuilder.Plugins.General
         }
         #endregion
 
-        private string image;
-        public string Image
-        {
-            get => image;
-            set
-            {
-                image = value;
-                NotifyOfPropertyChange(() => Image);
-            }
-        }
-
-        private string pushedimage;
-        public string PushedImage
-        {
-            get => pushedimage;
-            set
-            {
-                pushedimage = value;
-                NotifyOfPropertyChange(() => PushedImage);
-            }
-        }
 
 
         #region HandleEvents
-        public void Handle(EditEvent message)
-        {
-            Frame = !Frame;
-            IsSelected = false;
-        }
 
 
         public void Handle(TransformEvent translate)
@@ -225,36 +204,9 @@ namespace CockpitBuilder.Plugins.General
             //}
             //ScaleX = ScaleX * (translate.Size + GlyphThickness) / GlyphThickness;
         }
-        public void Handle(SelectedEvent message)
-        {
-            if (string.IsNullOrEmpty(message.Tag))
-            {
-                IsSelected = false;
-                return;
-            }
 
-            if (message.Tag[0] != '+')
-            {
-                IsSelected = message.Tag.Equals(tag);
-                return;
-            }
 
-            if (tag.Equals(message.Tag.Substring(1)) && message.Tag[0] == '+')
-            {
-                IsSelected = !IsSelected;
-            }
-        }
 
-        public void SetLayout()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Handle(NewLayoutEvent message)
-        {
-            //PluginHeight = message.NewLayoutHeight;
-            //PluginWidth = message.NewLayoutWidth;
-        }
 
         public void Handle(NewAppearanceEvent message)
         {

@@ -23,8 +23,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             System.Diagnostics.Debug.WriteLine("sortie pushBehaviour");
         }
 
-        //public PushButton_ViewModel DeviceModel;
-
         public string Name { get; set; }
 
         public IReadOnlyList<PushButtonType> PushButtonTypes { get; }

@@ -25,22 +25,20 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Label Grid.Column="0" Grid.Row="0" FontSize="10" HorizontalAlignment="Right" Content="Type">
-            <Label.ToolTip>Selects what kind of toggle switch to emulate.</Label.ToolTip>
-        </Label>
+        <Label Grid.Column="0" Grid.Row="0" FontSize="10" HorizontalAlignment="Right" Content="Type"
+               ToolTip="Selects what kind of toggle switch to emulate." />
         <ComboBox x:Name="SwitchTypes" Grid.Column="1" Grid.Row="0" FontSize="10" Margin="0,2,0,2" HorizontalAlignment="Left" ItemsSource="{Binding Source={pe:EnumBindingSource {x:Type pe:SwitchType}}}" SelectedIndex ="{Binding SelectedSwitchTypeIndex}"  />
-        
-        <Label Grid.Column="0" Grid.Row="1" FontSize="10" HorizontalAlignment="Right" Content="Default Position">
-            <Label.ToolTip>Position which this switch will default to on profile load or reset.</Label.ToolTip>
-        </Label>
+
+        <Label Grid.Column="0" Grid.Row="1" FontSize="10" HorizontalAlignment="Right" Content="Default Position"
+            ToolTip="Position which this switch will default to on profile load or reset." />
         <ComboBox x:Name="DefaultPositions" Grid.Column="1" Grid.Row="1" FontSize="10" Margin="0,2,0,2" HorizontalAlignment="Left" />
-        <Label Grid.Column="0" Grid.Row="2" FontSize="10" HorizontalAlignment="Right">
-            <Label.ToolTip>When checked this switch has an indicator light.</Label.ToolTip> Indicator Light
-        </Label>
+        
+        <Label Grid.Column="0" Grid.Row="2" FontSize="10" HorizontalAlignment="Right" Content="Indicator Light"
+               ToolTip="When checked this switch has an indicator light." />
         <CheckBox x:Name="HasIndicator" Grid.Column="1" Grid.Row="2" FontSize="10" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Left"  />
-        <Label Grid.Column="0" Grid.Row="3" FontSize="10" HorizontalAlignment="Right">
-            <Label.ToolTip>When set to touch this switch will respond to control regions (upper/lower, left/right) and switch the switch appropriatly. Swipe will switch the switch in the direction you swipe your finger or mouse.</Label.ToolTip> Click Type
-        </Label>
+        
+        <Label Grid.Column="0" Grid.Row="3" FontSize="10" HorizontalAlignment="Right" Content="Click Type"
+               ToolTip="When set to touch this switch will respond to control regions (upper/lower, left/right) and switch the switch appropriatly. Swipe will switch the switch in the direction you swipe your finger or mouse." />
         <!--<ComboBox Grid.Column="1" Grid.Row="3" FontSize="10" Margin="0,2,0,2" HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource ClickTypes}, Path=DisplayNames}" SelectedItem="{Binding Path=Control.ClickType, Converter={StaticResource ClickTypes}}" />-->
     </Grid>
 </UserControl>

@@ -1,4 +1,5 @@
-﻿using CockpitBuilder.Events;
+﻿using Caliburn.Micro;
+using CockpitBuilder.Events;
 using CockpitBuilder.Plugins.General;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,25 @@ namespace CockpitBuilder.Common.PropertyEditors
     public class ThreeWayToggleSwitchBehaviorEditorViewModel : PropertyEditorModel/*, Core.Common.Events.IHandle<ThreeWayToggleSwitchBehaviorEvent>*/
     {
         private readonly IEventAggregator eventAggregator;
-        public bool Pushbutton;
-        public ThreeWayToggleSwitchBehaviorEditorViewModel(IEventAggregator eventAggregator/*, int tag*/)
+
+        public ThreeWayToggleSwitchBehaviorEditorViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
+            var index = 0;
+            bool IsModeEditor = (bool)settings[index++];
+            if (IsModeEditor)
+            {
+                var view = ViewLocator.LocateForModel(this, null, null);
+                ViewModelBinder.Bind(this, view, null);
+            }
+
             this.eventAggregator = eventAggregator;
 
             SwitchOrientation = Enum.GetValues(typeof(SwitchOrientation)).Cast<SwitchOrientation>().ToList();
-            Name = "Behavior";
 
             eventAggregator.Subscribe(this);
+
+            Name = "Behavior";
         }
-        public Switch1_ViewModel DeviceModel;
-        public ThreeWayToggleSwitchAppearanceEditorViewModel AppearancewModel;
 
         public string Name { get; set; }
 
@@ -33,7 +41,7 @@ namespace CockpitBuilder.Common.PropertyEditors
             {
                 selectedSwitchTypeIndex = value;
                 SetNumberOfPosition(value >= 3);
-                AppearancewModel.Has3Images = value >= 3;
+                Has3Images = value >= 3;
                 NotifyOfPropertyChange(() => SelectedSwitchTypeIndex);
             }
         }
@@ -70,10 +78,10 @@ namespace CockpitBuilder.Common.PropertyEditors
 
             set
             {
-                if (!AppearancewModel.Has3Images && value > 1)
-                    defaultInitialPosition = 1;
-                else
-                    defaultInitialPosition = value;
+                //if (!AppearancewModel.Has3Images && value > 1)
+                //    defaultInitialPosition = 1;
+                //else
+                //    defaultInitialPosition = value;
 
 
                 SelectedDefaultPosition = (SwitchPosition)defaultInitialPosition;
@@ -88,7 +96,6 @@ namespace CockpitBuilder.Common.PropertyEditors
             set
             {
                 selectedDefaultPosition = value;
-                DeviceModel.SwitchIndex = (int)value;
                 NotifyOfPropertyChange(() => SelectedDefaultPosition);
             }
         }
@@ -107,9 +114,21 @@ namespace CockpitBuilder.Common.PropertyEditors
             set
             {
                 hasIndicator = value;
-                AppearancewModel.HasIndicator = value;
+                //AppearancewModel.HasIndicator = value;
 
                 NotifyOfPropertyChange(() => HasIndicator);
+            }
+        }
+        private bool has3images;
+        public bool Has3Images
+        {
+            get => has3images;
+            set
+            {
+                has3images = value;
+                //AppearancewModel.HasIndicator = value;
+
+                NotifyOfPropertyChange(() => Has3Images);
             }
         }
     }
