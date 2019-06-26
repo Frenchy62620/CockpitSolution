@@ -31,7 +31,7 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                                     IDropTarget, IDropInfo
     {
         
-        public double ZoomFactor;
+        public double ZoomFactorFromMonitorViewModel;
         public Dictionary<ContentControl, bool > DictContentcontrol = new Dictionary<ContentControl, bool>();
 
         private readonly IEventAggregator eventAggregator;
@@ -66,7 +66,7 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
 
             NbrSelected = 0;
         }
-        private static int indice = 0;
+
         private static int untitledIndex;
         private int untitledId;
 
@@ -98,7 +98,6 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             set
             {
                 fullimage = value;
-                //NotifyOfPropertyChange(() => FullImage);
             }
         }
 
@@ -196,6 +195,11 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             }
         }
 
+        private bool IsAlreadySelected(ContentControl s)
+        {
+            return DictContentcontrol[s];
+        }
+
         private int nbrSelected;
         public int NbrSelected
         {
@@ -222,15 +226,41 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             }
         }
 
+        //public bool InsideContentcontrol;
+        //public void MouseEnterInContentControl()
+        //{
+        //    InsideContentcontrol = true;
+        //}
+        //public void MouseLeaveFromContentControl()
+        //{
+        //    InsideContentcontrol = false;
+        //}
+        public void MouseWheelOnContentControl(object sender, MouseWheelEventArgs e)
+        {
+            e.Handled = true;
+
+            var match = Keyboard.IsKeyDown(key: Key.LeftCtrl) || Keyboard.IsKeyDown(key: Key.RightCtrl);
+            var step = (match ? 5 : 1) * (e.Delta > 0 ? 1 : -1);
+            var list = DictContentcontrol.Where(item => item.Value).Select(item => item.Key.DataContext as PluginModel);
+            foreach (var item in list)
+            {
+                item.Width += step;
+            }
+        }
+
         public void MouseLeftButtonDownOnMonitorView(IInputElement elem, Point pos, MouseEventArgs e)
         {
             RemoveAdorners();
             eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { LayoutMonitor }));
         }
-        public void MouseLeftButtonDownOnContentControl(object sender)
+
+        public void PreviewMouseLeftButtonDownOnContentControl(object sender, MouseEventArgs e)
         {
             var s = sender as ContentControl;
             var CtrlDown = (Keyboard.Modifiers & ModifierKeys.Control) != 0;
+
+            if (!IsAlreadySelected(s) || CtrlDown)
+                e.Handled = true;
 
             if (CtrlDown)
             {
@@ -276,10 +306,6 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                 eventAggregator.Publish(new DisplayPropertiesView1Event((FirstSelected.DataContext as PluginModel).GetProperties()));
         }
 
-        public void MouseGridEnter(object sender)
-        {
-
-        }
 
         public void KeyTest(object sender, KeyEventArgs e)
         {
@@ -376,9 +402,11 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             Ninject.Parameters.Parameter[][] paramproperties = null;
             string[] properties;
             string model;
+            var AngleSwitch = 90; 
             if (FullImage.Contains("mfd"))
             {
                 var FullImage1 = FullImage.Replace("_0.png", "_1.png");
+
                 param = new Ninject.Parameters.Parameter[]
                 {
                         new ConstructorArgument("settings", new object[]{                                                   //PushButton
@@ -448,7 +476,7 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                         new ConstructorArgument("settings", new object[]{                                                   //Switch Button
                             true,                                                                                               //0 is in Mode Editor?
                             $"{nameUC}",                                                                                        //1 name of UC
-                            new int[] { left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0 },//2 [Left, Top, Width, Height, Angle]
+                            new int[] { left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, AngleSwitch },//2 [Left, Top, Width, Height, Angle]
 
                             new string[]{ FullImage, FullImage1, FullImage2 , "", "", "" }, 0,                                  //3 [images] & startimageposition
 
@@ -465,8 +493,8 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             var view = ViewLocator.LocateForModel(viewmodel, null, null);
             ViewModelBinder.Bind(viewmodel, view, null);
             var v = viewmodel as PluginModel;
-            v.ZoomFactor = ZoomFactor;
-
+            v.ZoomFactorFromPluginModel = ZoomFactorFromMonitorViewModel;
+            //v.AngleRot = model.Contains("Switch") ? AngleSwitch : 0;
             //RemoveAdorners();
             MyCockpitViewModels.Add((PluginModel)viewmodel);
             eventAggregator.Publish(new DragSelectedItemEvent(tbg.SelectedToolBoxItem));
@@ -499,28 +527,28 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             }
         }
 
-        public void MouseEnter(object sender, Point MousePoint, MouseEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine($"{e.GetPosition((IInputElement)sender)}   sender = {sender}");
-            if (sender.ToString().Contains("Rectangle"))
-            {
+        //public void MouseEnter(object sender, Point MousePoint, MouseEventArgs e)
+        //{
+        //    System.Diagnostics.Debug.WriteLine($"{e.GetPosition((IInputElement)sender)}   sender = {sender}");
+        //    if (sender.ToString().Contains("Rectangle"))
+        //    {
                 
-            }
-                if (sender.ToString().Contains("MonitorView"))
-            {
-                foreach (var p in MyCockpitViewModels)
-                {
-                    p.IsClickCommingFromMonitorViewModel = true;
-                }
-            }
-        }
-        public void MouseLeave()
-        {
-            foreach (var p in MyCockpitViewModels)
-            {
-                p.IsClickCommingFromMonitorViewModel = false;
-            }
-        }
+        //    }
+        //        if (sender.ToString().Contains("MonitorView"))
+        //    {
+        //        foreach (var p in MyCockpitViewModels)
+        //        {
+        //            //p.IsClickCommingFromMonitorViewModel = true;
+        //        }
+        //    }
+        //}
+        //public void MouseLeave()
+        //{
+        //    foreach (var p in MyCockpitViewModels)
+        //    {
+        //        //p.IsClickCommingFromMonitorViewModel = false;
+        //    }
+        //}
 
         //public void UnselectAll()
         //{

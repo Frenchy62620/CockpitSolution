@@ -9,12 +9,11 @@
              xmlns:local ="clr-namespace:CockpitBuilder.Views.Main.DockPanel.Models"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              mc:Ignorable="d"  d:DesignHeight="450" d:DesignWidth="800" 
-               Background="Transparent" cal:Message.Attach="[Event MouseLeave] = [Action MouseLeave];
-                                                            [Event MouseOver] = [Action MouseOver($source , $eventArgs)];
-                                                            [Event MouseMove] = [Action PreviewMouseMoveOnMonitorView($source, $mousepoint, $eventArgs)];
+               Background="Transparent" cal:Message.Attach="[Event MouseMove] = [Action PreviewMouseMoveOnMonitorView($source, $mousepoint, $eventArgs)];
                                                             [Event PreviewKeyDown] = [Action KeyTest($pressedKey, $eventargs)]; 
                                                             [Gesture Ctrl+E,A] = [Action KeyTest($source ,$pressedKey)]">
-
+    <!--[Event MouseLeave] = [Action MouseLeave];
+    [Event MouseOver] = [Action MouseOver($source , $eventArgs)];-->
     <UserControl.Resources>
         <DataTemplate x:Key="PupilDragAdorner">
             <Grid x:Name="Over">
@@ -35,7 +34,7 @@
 
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="6">
-            <Grid x:Name="MainGrid" cal:Message.Attach="">
+            <Grid>
  
                 <Rectangle x:Name="MainRectangle" Width="{Binding Monitor.Width}" Height="{Binding Monitor.Height}" StrokeThickness="4" Stroke="Black" 
                            gg:DragDrop.DropHandler="{Binding}"
@@ -43,10 +42,9 @@
                            gg:DragDrop.DropAdornerTemplate="{StaticResource PupilDragAdorner}"
                            gg:DragDrop.DragAdornerTemplate="{StaticResource PupilDragAdorner}"
                            cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnMonitorView($source, $mousepoint, $eventArgs)];
-                                               [Event MouseEnter] = [Action MouseEnter($source, $mousepoint, $eventArgs)];
                                                [Event PreviewKeyDown] = [Action KeyTest($source, $pressedKey)]; 
-                                               [Gesture Ctrl+E,A] = [Action KeyTest($source ,$pressedKey)]"
-                            >
+                                               [Gesture Ctrl+E,A] = [Action KeyTest($source ,$pressedKey)]">
+                    <!--[Event MouseEnter] = [Action MouseEnter($source, $mousepoint, $eventArgs)];-->
                     <Rectangle.Fill>
                         <DrawingBrush Viewport="0,0,10,10" ViewportUnits="Absolute" TileMode="Tile">
                             <DrawingBrush.Drawing>
@@ -56,7 +54,6 @@
                                 </DrawingGroup>
                             </DrawingBrush.Drawing>
                         </DrawingBrush>
-
                     </Rectangle.Fill>
 
                 </Rectangle>
@@ -66,9 +63,9 @@
                        gg:DragDrop.DropAdornerTemplate="{StaticResource PupilDragAdorner}"
                        gg:DragDrop.DragMouseAnchorPoint="0.0,0.0"
                        cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnMonitorView($source, $mousepoint, $eventArgs)];
-                                           [Event KeyDown] = [Action KeyTest($pressedKey)]; 
+                                           [Event PreviewKeyDown] = [Action KeyTest($pressedKey)]; 
                                            [Gesture Ctrl+E,A] = [Action KeyTest($source ,$pressedKey)]"
-                       /> <!--IsHitTestVisible="False"-->
+                       /> 
 
                 <ItemsControl ItemsSource="{Binding MyCockpitViewModels}" >
                     <ItemsControl.ItemTemplate>
@@ -76,8 +73,14 @@
                             <!--<Border BorderThickness="{Binding IsUCSelected, Converter={StaticResource MyConverterMargin}}" BorderBrush="Red" >-->
                             <AdornerDecorator >
                                 <ContentControl cal:View.Model="{Binding .}" 
-                                                cal:Message.Attach="[Event MouseLeftButtonDown] = [Action MouseLeftButtonDownOnContentControl($source)];
-                                                                    [Event Loaded] = [Action ContentControlLoaded($source)]">
+                                                cal:Message.Attach="[Event PreviewMouseLeftButtonDown] = [Action PreviewMouseLeftButtonDownOnContentControl($source, $eventArgs)];
+                                                                    [Event Loaded] = [Action ContentControlLoaded($source)];                                              
+                                                                    [Event MouseWheel] = [Action MouseWheelOncontentControl($source, $eventArgs)]">
+                                    <ContentControl.RenderTransform>
+                                        <TransformGroup>
+                                            <RotateTransform Angle="{Binding Layout.AngleRotation}" />
+                                        </TransformGroup>
+                                    </ContentControl.RenderTransform>
                                 </ContentControl>
                             </AdornerDecorator>
                             <!--</Border>-->

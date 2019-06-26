@@ -60,7 +60,11 @@ namespace CockpitBuilder.Plugins.General
             get => Layout.Height;
             set => Layout.Height = value;
         }
-
+        //public override double Angle
+        //{
+        //    get => Layout.AngleRotation;
+        //    set => Layout.AngleRotation = value;
+        //}
         public override PropertyEditorModel[] GetProperties()
         {
             return new PropertyEditorModel[] { Layout, Appearance, Behavior };
@@ -76,55 +80,18 @@ namespace CockpitBuilder.Plugins.General
 
         #endregion
 
-        //private double pluginwidth;
-        //public double PluginWidth
-        //{
-        //    get => pluginwidth;
-        //    set
-        //    {
-        //        if (pluginwidth != value)
-        //        {
-        //            pluginwidth = value;
-        //            NotifyOfPropertyChange(() => PluginWidth);
-        //        }
-        //    }
-        //}
-
-        //private double pluginheight;
-        //public double PluginHeight
-        //{
-        //    get => pluginheight;
-        //    set
-        //    {
-        //        if (pluginheight != value)
-        //        {
-        //            pluginheight = value;
-        //            NotifyOfPropertyChange(() => PluginHeight);
-        //        }
-        //    }
-        //}
-
 
         #region Mouse Events
         public void MouseLeftButtonDownOnUC(IInputElement elem, Point pos, MouseEventArgs e)
         {
-            //if (IsClickCommingFromMonitorViewModel)
-            //{
-            //    eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)Layout, Appearance, Behavior }));
-
-            //    if (e != null)
-            //        e.Handled = true;
-            //}
-
             Mouse.Capture((UIElement)elem);
-            //((UIElement)elem).CaptureMouse();
-            var r = elem as Rectangle;
-            Appearance.IndexImage = 1;
+            Appearance.IndexImage = 1 - Appearance.IndexImage;
         }
         public void MouseLeftButtonUp()
         {
             Mouse.Capture(null);
-            Appearance.IndexImage = 0;
+            if ((int)Behavior.SelectedPushButtonType == 0)
+                Appearance.IndexImage = 0;
         }
         public void MouseEnterInUC(MouseEventArgs e)
         {

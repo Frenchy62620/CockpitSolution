@@ -58,9 +58,12 @@
                 <ItemsControl ItemsSource="{Binding MonitorViewModel.MyCockpitViewModels}" >
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <ContentControl cal:View.Model="{Binding .}" x:Name="TOTO" >
+                            <ContentControl cal:View.Model="{Binding .}" >
                                 <ContentControl.RenderTransform>
-                                    <ScaleTransform ScaleX="{Binding ZoomFactor}" ScaleY="{Binding ZoomFactor}"/>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="{Binding ZoomFactorFromPluginModel}" ScaleY="{Binding ZoomFactorFromPluginModel}"/>
+                                        <RotateTransform Angle="{Binding Layout.AngleRotation}" />
+                                    </TransformGroup>
                                 </ContentControl.RenderTransform>
                             </ContentControl>
                         </DataTemplate>
@@ -79,7 +82,7 @@
                                 <Setter.Value>
                                     <MultiBinding Converter="{StaticResource MultiplyConverter}">
                                         <Binding Path="Layout.UCLeft" />
-                                        <Binding Path="ZoomFactor" />
+                                        <Binding Path="ZoomFactorFromPluginModel" />
                                     </MultiBinding>
                                 </Setter.Value>
                             </Setter>
@@ -87,7 +90,7 @@
                                 <Setter.Value>
                                     <MultiBinding Converter="{StaticResource MultiplyConverter}">
                                         <Binding Path="Layout.UCTop" />
-                                        <Binding Path="ZoomFactor" />
+                                        <Binding Path="ZoomFactorFromPluginModel" />
                                     </MultiBinding>
                                 </Setter.Value>
                             </Setter>

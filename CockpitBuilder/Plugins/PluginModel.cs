@@ -10,29 +10,30 @@ namespace CockpitBuilder.Plugins
         public abstract double Height { get; set; }
         public abstract double Left { get; set; }
         public abstract double Top { get; set; }
+        //public abstract double Angle { get; set; }
         public abstract PropertyEditorModel[] GetProperties();
 
-        private double zoomfactor;
-        public double ZoomFactor
+        private double zoomfactorfrompluginmodel;
+        public double ZoomFactorFromPluginModel
         {
-            get => zoomfactor;
+            get => zoomfactorfrompluginmodel;
             set
             {
-                zoomfactor = value;
-                NotifyOfPropertyChange(() => ZoomFactor);
+                zoomfactorfrompluginmodel = value;
+                NotifyOfPropertyChange(() => ZoomFactorFromPluginModel);
             }
         }
-        //private bool isucSelected;
-        //public bool IsUCSelected
+        //private double angleRot;
+        //public double AngleRot
         //{
-        //    get => isucSelected;
+        //    get => angleRot;
         //    set
         //    {
-        //        isucSelected = value;
-        //        NotifyOfPropertyChange(() => IsUCSelected);
+        //        angleRot = value;
+        //        NotifyOfPropertyChange(() => AngleRot);
         //    }
         //}
-        public bool IsClickCommingFromMonitorViewModel;
+        //public bool IsClickCommingFromMonitorViewModel;
         public string NameUC;
     }
 }

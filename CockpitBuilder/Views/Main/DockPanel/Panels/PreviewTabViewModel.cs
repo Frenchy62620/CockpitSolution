@@ -11,7 +11,7 @@ using IEventAggregator = CockpitBuilder.Core.Common.Events.IEventAggregator;
 
 namespace CockpitBuilder.Views.Main.DockPanel.Panels
 {
-    public class PreviewTabViewModel : PanelViewModel, Core.Common.Events.IHandle<DragSelectedItemEvent>, Core.Common.Events.IHandle<MonitorViewStartedEvent>
+    public class PreviewTabViewModel : PanelViewModel, Core.Common.Events.IHandle<MonitorViewStartedEvent>
     {
         private readonly IEventAggregator eventAggregator;
 
@@ -253,10 +253,10 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             PreviewWidth = ZoomFactor * Monitor.Width;
             PreviewHeight = ZoomFactor * Monitor.Height;
         }
-        public void Handle(DragSelectedItemEvent message)
-        {
-            System.Diagnostics.Debug.WriteLine($"image = {message.FullImageName}");
-        }
+        //public void Handle(DragSelectedItemEvent message)
+        //{
+        //    System.Diagnostics.Debug.WriteLine($"image = {message.FullImageName}");
+        //}
 
         public void Handle(MonitorViewStartedEvent message)
         {
@@ -265,10 +265,10 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
 
         public void SetZoomFactor(double value)
         {
-            MonitorViewModel.ZoomFactor = value;
+            MonitorViewModel.ZoomFactorFromMonitorViewModel = value;
             foreach (var p in MonitorViewModel.MyCockpitViewModels)
             {
-                p.ZoomFactor = value;
+                p.ZoomFactorFromPluginModel = value;
             }
         }
     }

@@ -24,15 +24,15 @@ namespace CockpitBuilder.Common.PropertyEditors
                 ViewModelBinder.Bind(this, view, null);
             }
 
-
-
             NameUC = (string)settings[1];
+
             UCLeft = ((int[])settings[2])[0];
             UCTop = ((int[])settings[2])[1];
             
             var width = (double)((int[])settings[2])[2];
             var height = (double)((int[])settings[2])[3];
-            AngleRotation = ((int[])settings[2])[4];
+
+            SelectedSwitchRotation = (SwitchRotation)((int[])settings[2])[4];
 
             Factor = height / width;
 
@@ -138,18 +138,20 @@ namespace CockpitBuilder.Common.PropertyEditors
             set
             {
                 selectedSwitchRotation = value;
+                AngleRotation = (double)value;
                 NotifyOfPropertyChange(() => SelectedSwitchRotation);
             }
         }
 
-        private int angleRotation;
-        public int AngleRotation
+        private double angleRotation;
+        public double AngleRotation
         {
             get => angleRotation;
             set
             {
                 angleRotation = value;
-                SelectedSwitchRotation = (SwitchRotation)value;
+                //SelectedSwitchRotation = (SwitchRotation)value;
+                NotifyOfPropertyChange(() => AngleRotation);
             }
         }
 

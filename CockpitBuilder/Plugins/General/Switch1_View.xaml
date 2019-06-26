@@ -15,8 +15,8 @@
     <!--RenderTransformOrigin="0.5,0.5"-->
     <UserControl.RenderTransform>
         <TransformGroup>
-            <RotateTransform x:Name="rotation" Angle="{Binding Layout.AngleRotation}" />
-            <ScaleTransform x:Name="scale" ScaleX="{Binding ScaleX}" ScaleY="{Binding ScaleX}"/>
+            <!--<RotateTransform x:Name="rotation" Angle="{Binding Layout.AngleRotation}" />
+            <ScaleTransform x:Name="scale" ScaleX="{Binding ScaleX}" ScaleY="{Binding ScaleX}"/>-->
         </TransformGroup>
     </UserControl.RenderTransform>
 
