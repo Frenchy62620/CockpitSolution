@@ -50,7 +50,7 @@
             </Image.Style>
         </Image>
         <TextBlock Text="{Binding Appearance.GlyphText}" Foreground="{Binding Appearance.TextColor, Converter={StaticResource MyconverterColorToSolidColorBrush}}"
-                   HorizontalAlignment="{Binding Appearance.HAlign}" VerticalAlignment="{Binding Appearance.VAlign}" 
+                   HorizontalAlignment="{Binding Appearance.SelectedHAlignType}" VerticalAlignment="{Binding Appearance.SelectedVAlignType}" 
                    FontFamily="{Binding Appearance.TextFormat.FontFamily}" FontSize="{Binding Appearance.TextFormat.FontSize}" 
                    FontStyle="{Binding Appearance.TextFormat.FontStyle}"
                    FontWeight="{Binding Appearance.TextFormat.FontWeight}" TextDecorations="{Binding Appearance.TextFormat.TextDecorations}"
@@ -61,8 +61,8 @@
                     <Binding Path="Appearance.TextFormat.PaddingTop" />
                     <Binding Path="Appearance.TextFormat.PaddingRight" />
                     <Binding Path="Appearance.TextFormat.PaddingBottom" />
-                    <Binding ElementName="Switch" Path="Width" />
-                    <Binding ElementName="Switch" Path="Height" />
+                    <Binding Path="Width" RelativeSource="{RelativeSource AncestorType={x:Type Grid}}"/>
+                    <Binding Path="Height" RelativeSource="{RelativeSource AncestorType={x:Type Grid}}"/>
                 </MultiBinding>
             </TextBlock.Margin>
             <TextBlock.Style>
@@ -108,8 +108,8 @@
                 <MultiBinding Converter="{StaticResource DrawGlyphes}">
                     <Binding Path="Appearance.GlyphSelected"/>
                     <Binding Path="Appearance.GlyphScale"/>
-                    <Binding ElementName="Switch" Path="Width"/>
-                    <Binding ElementName="Switch" Path="Height"/>
+                    <Binding Path="Width" RelativeSource="{RelativeSource AncestorType={x:Type Grid}}"/>
+                    <Binding Path="Height" RelativeSource="{RelativeSource AncestorType={x:Type Grid}}"/>
                     <Binding Path="Appearance.GlyphThickness"/>
                 </MultiBinding>
             </Path.Data>

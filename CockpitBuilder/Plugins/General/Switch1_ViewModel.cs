@@ -94,7 +94,7 @@ namespace CockpitBuilder.Plugins.General
                 case 1:
                 case 2:
                     Appearance.IndexImage = 1 - Appearance.IndexImage;
-                    return;
+                    break;
                 default:
                     switch(Layout.AngleRotation)
                     {
@@ -115,7 +115,8 @@ namespace CockpitBuilder.Plugins.General
                     }
                     break;
             }
-             ((UIElement)elem).CaptureMouse();
+             //((UIElement)elem).CaptureMouse();
+            Mouse.Capture((UIElement)elem);
         }
 
         public void MouseLeftButtonUp()

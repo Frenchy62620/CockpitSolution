@@ -37,8 +37,8 @@ namespace CockpitBuilder.Common.PropertyEditors
             Has3Images = !string.IsNullOrEmpty(PositionImage2);
             hasIndicator = !string.IsNullOrEmpty(PositionIndicatorImage0);
 
-            Has3Images = true;
-            HasIndicator = false;
+            //Has3Images = true;
+            //HasIndicator = false;
             this.eventAggregator = eventAggregator;
             eventAggregator.Subscribe(this);
 

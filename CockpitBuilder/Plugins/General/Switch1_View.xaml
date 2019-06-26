@@ -21,10 +21,7 @@
     </UserControl.RenderTransform>
 
     <Grid x:Name="Switch"  Width="{Binding Path=Layout.Width}" Height="{Binding Path=Layout.Height}" >
-        <!--def image
-               Width="{Binding ElementName=usercontrol, Path=Width}"
-               Height="{Binding ElementName=usercontrol, Path=Height}"
-        -->
+
         <Image x:Name="SwitchUp" Source="{Binding Appearance.PositionImage2, Mode=TwoWay, TargetNullValue={x:Null}}"
                HorizontalAlignment="Center" VerticalAlignment="Center" >
             <Image.Style>

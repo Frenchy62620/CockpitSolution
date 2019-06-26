@@ -39,29 +39,38 @@ namespace CockpitBuilder.Common.CustomControls
             _textPaddingBottom = 0d;
 
             _horizontalAlignment = TextHorizontalAlignment.Center;
-            _verticalAlignment = TextVerticalAlignment.Top;
+            _verticalAlignment = TextVerticalAlignment.Center;
         }
 
         public TextFormat(string fontFamily, 
-                          FontStyle style, 
-                          FontWeight weight, 
-                          double size, 
+                          string fontStyle, 
+                          string fontWeight, 
+                          double fontSize, 
                           double[] padding, 
-                          TextHorizontalAlignment horizontalAlignment, 
-                          TextVerticalAlignment verticalAlignment)
+                          int[] Alignment)
         {
+            TypeConverter fsc = TypeDescriptor.GetConverter(typeof(FontStyle));
+            TypeConverter fwc = TypeDescriptor.GetConverter(typeof(FontWeight));
+
+            //var propertyInfo = typeof(FontStyles).GetProperty("Italic",
+            //                                      BindingFlags.Static |
+            //                                      BindingFlags.Public |
+            //                                      BindingFlags.IgnoreCase);
+            //FontStyle f = (FontStyle)propertyInfo.GetValue(null, null);
+
             FontFamily = new FontFamily(fontFamily);
-            FontStyle = style;
-            FontWeight = weight;
-            FontSize = size;
+
+            FontStyle = (FontStyle)fsc.ConvertFromString(null, System.Globalization.CultureInfo.InvariantCulture, fontStyle);
+            FontWeight = (FontWeight)fwc.ConvertFromString(null, System.Globalization.CultureInfo.InvariantCulture, fontWeight);
+            FontSize = fontSize;
 
             PaddingLeft = padding[0];
             PaddingTop = padding[1];
             PaddingRight = padding[2];
             PaddingBottom = padding[3];
 
-            HorizontalAlignment = horizontalAlignment;
-            VerticalAlignment = verticalAlignment;
+            HorizontalAlignment = (TextHorizontalAlignment)Alignment[0];
+            VerticalAlignment = (TextVerticalAlignment)Alignment[1];
         }
 
         public FontFamily FontFamily

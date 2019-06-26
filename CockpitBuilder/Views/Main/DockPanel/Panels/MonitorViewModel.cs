@@ -381,15 +381,18 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                 var FullImage1 = FullImage.Replace("_0.png", "_1.png");
                 param = new Ninject.Parameters.Parameter[]
                 {
-                        new ConstructorArgument("settings", new object[]{
-                            true,                                                                                               //0 is in Mode Editor?
-                            $"{nameUC}",                                                                                        //1 name of UC
-                            new int[] { left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0 },//2 [Left, Top, Width, Height, Angle]
+                        new ConstructorArgument("settings", new object[]{                                                   //PushButton
+                            true,                                                                                               //0  is in Mode Editor?
+                            $"{nameUC}",                                                                                        //1  name of UC
+                            new int[] { left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0 },//2  [Left, Top, Width, Height, Angle]
 
-                            new string[]{ FullImage, FullImage1 }, 0,                                                           //3 [images] & startimageposition
-                            2d, 0.8d, (PushButtonGlyph)0, Colors.White,                                                         //5 Glyph: Thickness, Scale, Type, Color
+                            new string[]{ FullImage, FullImage1 }, 0,                                                           //3  [images] & startimageposition
+                            2d, 0.8d, (PushButtonGlyph)0, Colors.White,                                                         //5  Glyph: Thickness, Scale, Type, Color
+                            "Hello", "1,1", "Franklin Gothic", "Normal", "Normal",                                              //9  Text, TextPushOffset, Family, Style, Weight
+                            12d, new double[] { 0d, 0d, 0d, 0d },                                                               //14 Size, [padding L,T,R,B]
+                            new int[] { 1, 1 },  Colors.White,                                                                  //16 [TextAlign H,V], TextColor
 
-                            0                                                                                                   //9 Button Type
+                            1                                                                                                   //18 Button Type
                                                                         }, true)
                 };
 
@@ -405,28 +408,32 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
                     {
                         // Layout
                         new ConstructorArgument("settings", new object[]{
-                            true,                                                                                                   //0 In Mode Editor?
-                            $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            //1 name of UC
-                            left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0,                  //2 [Left, Top, Width, Height, Angle]
-                            tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0,                             
-                            0, 1d, 0, 3 }, true)
+                            true,                                                                                               //0  In Mode Editor?
+                            $"{nameUC}",                                                                                        //1  name of UC
+                            new int[] { left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0 } //2  [Left, Top, Width, Height, Angle]
+                        }, true)
                     },
                         // Appearance
                     new Ninject.Parameters.Parameter[] 
                     {
                         new ConstructorArgument("settings", new object[]{
-                            true,                                                                                                   //0 In Mode Editor?
-                            $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            //1 name of UC
-                            new string[]{ FullImage, FullImage1 }, 0,                                                               //2 images, start image position
-                            new TextFormat() }, true)
+                            true,                                                                                               //0  In Mode Editor?
+                            $"{nameUC}",                                                                                        //1  name of UC
+                            new string[]{ FullImage, FullImage1 }, 0,                                                           //2  images, start image position
+                            2d, 0.8d, (PushButtonGlyph)0, Colors.White,                                                         //4  Glyph: Thickness, Scale, Type, Color
+                            "Hello", "1,1", "Franklin Gothic", "Normal", "Normal",                                              //8  Text, TextPushOffset, Family, Style, Weight
+                            12d, new double[] { 0d, 0d, 0d, 0d },                                                               //13 Size, [padding L,T,R,B]
+                            new int[] { 1, 1 },  Colors.White                                                                   //15 [TextAlign H,V], TextColor
+                        }, true)
                     },
                         // Behavior
                     new Ninject.Parameters.Parameter[]
                     { 
                         new ConstructorArgument("settings", new object[]{
-                            true,                                                                                                   // In Mode Editor?
-                            $"{tbg.SelectedToolBoxItem.ShortImageName}",                                                            // name of UC
-                            0, 1d, 0, 3 }, true)}
+                            true,                                                                                               //0  In Mode Editor?
+                            $"{nameUC}",                                                                                        //1  name of UC
+                            1                                                                                                   //2 Button Type
+                        }, true)}
                     };
 
 
@@ -438,7 +445,7 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
 
                 param = new Ninject.Parameters.Parameter[]
                 {
-                        new ConstructorArgument("settings", new object[]{
+                        new ConstructorArgument("settings", new object[]{                                                   //Switch Button
                             true,                                                                                               //0 is in Mode Editor?
                             $"{nameUC}",                                                                                        //1 name of UC
                             new int[] { left, top, tbg.SelectedToolBoxItem.ImageWidth, tbg.SelectedToolBoxItem.ImageHeight, 0 },//2 [Left, Top, Width, Height, Angle]
@@ -464,16 +471,6 @@ namespace CockpitBuilder.Views.Main.DockPanel.Panels
             MyCockpitViewModels.Add((PluginModel)viewmodel);
             eventAggregator.Publish(new DragSelectedItemEvent(tbg.SelectedToolBoxItem));
 
-
-
-            for(int i = 0; i < properties.Length; i++)
-            {
-                //var tClass = Type.GetType(model);
-                //var vmodel = resolutionRoot.TryGet(tClass, paramproperties[i]);
-            }
-
-
-            //eventAggregator.Publish(new DisplayPropertiesView1Event(new[] { (PropertyEditorModel)layout, appearance, behavior }));
         }
 
 

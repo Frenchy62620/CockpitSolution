@@ -14,7 +14,7 @@ namespace CockpitBuilder.Common.PropertyEditors
         public PushButtonBehaviorEditorViewModel(IEventAggregator eventAggregator, params object[] settings)
         {
             PushButtonTypes = Enum.GetValues(typeof(PushButtonType)).Cast<PushButtonType>().ToList();
-            //SelectedPushButtonType = PushButtonType.Toggle;
+            SelectedPushButtonType = (PushButtonType)(int)settings[18];
             Name = "Behavior";
         }
 
@@ -39,16 +39,16 @@ namespace CockpitBuilder.Common.PropertyEditors
             }
         }
 
-        private int pushButtonTypeIndex;
-        public int PushButtonTypeIndex
-        {
-            get => pushButtonTypeIndex;
+        //private int pushButtonTypeIndex;
+        //public int PushButtonTypeIndex
+        //{
+        //    get => pushButtonTypeIndex;
 
-            set
-            {
-                pushButtonTypeIndex = value;
-                SelectedPushButtonType = (PushButtonType)value;
-            }
-        }
+        //    set
+        //    {
+        //        pushButtonTypeIndex = value;
+        //        SelectedPushButtonType = (PushButtonType)value;
+        //    }
+        //}
     }
 }

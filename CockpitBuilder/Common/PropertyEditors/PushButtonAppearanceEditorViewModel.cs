@@ -32,9 +32,8 @@ namespace CockpitBuilder.Common.PropertyEditors
 
             NameUC = (string)settings[1];
 
-            VAlignTypes = Enum.GetValues(typeof(TextVerticalAlignment)).Cast<TextVerticalAlignment>().ToList();
-            HAlignTypes = Enum.GetValues(typeof(TextHorizontalAlignment)).Cast<TextHorizontalAlignment>().ToList();
-
+            HAlignTypes = Enum.GetValues(typeof(HorizontalAlignment)).Cast<HorizontalAlignment>().Take(3).ToList();
+            VAlignTypes = Enum.GetValues(typeof(VerticalAlignment)).Cast<VerticalAlignment>().Take(3).ToList();
             var index = 3;
             Image = ((string[])settings[index])[0];
             PushedImage = ((string[])settings[index++])[1];
@@ -44,21 +43,22 @@ namespace CockpitBuilder.Common.PropertyEditors
             GlyphScale = (double)settings[index++];
             SelectedPushButtonGlyph = (PushButtonGlyph)(int)settings[index++];
             GlyphColor = (Color)settings[index++];
-            GlyphText = "";
-            TextPushOffset = "1,1";
-            SelectedVAlignType = TextVerticalAlignment.Center;
-            SelectedHAlignType = TextHorizontalAlignment.Center;
+            GlyphText = (string)settings[index++];
+            TextPushOffset = (string)settings[index++]; 
 
-            TextFormat = new TextFormat(fontFamily: "Franklin Gothic",
-                                        style: FontStyles.Normal,
-                                        weight: FontWeights.Normal,
-                                        size: 12d,
-                                        padding: new double[] { 0d, 0d, 0d, 0d },
-                                        horizontalAlignment: TextHorizontalAlignment.Center,
-                                        verticalAlignment: TextVerticalAlignment.Center
+
+
+            TextFormat = new TextFormat(fontFamily: (string)settings[index++],
+                                        fontStyle: (string)settings[index++],           //Normal, Oblique or Italic  see FontStyles
+                                        fontWeight: (string)settings[index++],          //Thin.... see FontWeight
+                                        fontSize: (double)settings[index++],
+                                        padding: (double[])settings[index++],           //Padding L,T,R,B
+                                        Alignment: (int[])settings[index]               //Left, Center, Right and Top, center, Bottom
                                        );
+            SelectedHAlignType = (HorizontalAlignment)((int[])settings[index])[0];
+            SelectedVAlignType = (VerticalAlignment)((int[])settings[index])[1];
 
-            TextColor = Colors.White;
+            TextColor = (Color)settings[++index];
 
             eventAggregator.Subscribe(this);
             this.eventAggregator = eventAggregator;
@@ -77,8 +77,8 @@ namespace CockpitBuilder.Common.PropertyEditors
 
         private double LayoutWidth, LayoutHeight;
 
-        public IReadOnlyList<TextVerticalAlignment> VAlignTypes { get; }
-        public IReadOnlyList<TextHorizontalAlignment> HAlignTypes { get; }
+        public IReadOnlyList<VerticalAlignment> VAlignTypes { get; }
+        public IReadOnlyList<HorizontalAlignment> HAlignTypes { get; }
 
         private TextFormat textformat;
         public TextFormat TextFormat
@@ -140,52 +140,52 @@ namespace CockpitBuilder.Common.PropertyEditors
                 NotifyOfPropertyChange(() => OffsetX);
             }
         }
-        private TextVerticalAlignment selectedVAlignType;
-        public TextVerticalAlignment SelectedVAlignType
+        private VerticalAlignment selectedVAlignType;
+        public VerticalAlignment SelectedVAlignType
         {
             get => selectedVAlignType;
 
             set
             {
                 selectedVAlignType = value;
-                VAlign = (VerticalAlignment)value;
+                //VAlign = (VerticalAlignment)value;
                 NotifyOfPropertyChange(() => SelectedVAlignType);
             }
         }
-        private TextHorizontalAlignment selectedHAlignType;
-        public TextHorizontalAlignment SelectedHAlignType
+        private HorizontalAlignment selectedHAlignType;
+        public HorizontalAlignment SelectedHAlignType
         {
             get => selectedHAlignType;
 
             set
             {
                 selectedHAlignType = value;
-                HAlign = (HorizontalAlignment)value;
+                //HAlign = (HorizontalAlignment)value;
                 NotifyOfPropertyChange(() => SelectedHAlignType);
             }
         }
-        private HorizontalAlignment hAlign;
-        public HorizontalAlignment HAlign
-        {
-            get => hAlign;
+        //private HorizontalAlignment hAlign;
+        //public HorizontalAlignment HAlign
+        //{
+        //    get => hAlign;
 
-            set
-            {
-                hAlign = value;
-                NotifyOfPropertyChange(() => HAlign);
-            }
-        }
-        private VerticalAlignment vAlign;
-        public VerticalAlignment VAlign
-        {
-            get => vAlign;
+        //    set
+        //    {
+        //        hAlign = value;
+        //        NotifyOfPropertyChange(() => HAlign);
+        //    }
+        //}
+        //private VerticalAlignment vAlign;
+        //public VerticalAlignment VAlign
+        //{
+        //    get => vAlign;
 
-            set
-            {
-                vAlign = value;
-                NotifyOfPropertyChange(() => VAlign);
-            }
-        }
+        //    set
+        //    {
+        //        vAlign = value;
+        //        NotifyOfPropertyChange(() => VAlign);
+        //    }
+        //}
         private PushButtonGlyph selectedPushButtonGlyph;
         public PushButtonGlyph SelectedPushButtonGlyph
         {
